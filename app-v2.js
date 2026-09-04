@@ -500,13 +500,12 @@ async function syncQuests(silent=false){
     state.progression.combatAchievements.completed=(payload.combat_achievements||[]).map(Number).filter(Number.isFinite);
     state.progression.combatAchievements.lastSync=payload.timestamp||new Date().toISOString();
     state.progression.combatAchievements.source=source;
-    state.progression.collectionLog.completed=(payload.collection_log||[]).map(Number).filter(Number.isFinite);
-    state.progression.collectionLog.itemCount=Number.isFinite(Number(payload.collectionLogItemCount))?Number(payload.collectionLogItemCount):null;
-    state.progression.collectionLog.lastSync=payload.timestamp||new Date().toISOString();
-    state.progression.collectionLog.source=source;
     const completed=[];
-    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
-    save(silent?'Quests sincronizadas':completed.length?`${completed.length} meta(s) de quest concluída(s)`:'Quests atualizadas',silent);
+    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
+    const syncMessage=source==='WikiSync ao vivo'
+      ?`Quests, Diaries e Combat Achievements atualizados${completed.length?` · ${completed.length} meta(s) concluída(s)`:''}`
+      :`Quests, Diaries e Combat Achievements carregados do snapshot`;
+    save(syncMessage,silent);
   }catch(error){if(!silent)toast(`Não foi possível atualizar as quests: ${error.message}`)}finally{ui.questSyncing=false;render()}
 }
 

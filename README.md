@@ -15,7 +15,7 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 - planejamento de upgrades, skills, rotinas, drops, diaries e Combat Achievements;
 - Achievement Diaries completas, com tarefas, requisitos, filtros e progresso do WikiSync;
 - Combat Achievements com catálogo da Wiki, pontos, recompensas e metas automáticas;
-- Collection Log por item e por página, sincronizado pelo WikiSync;
+- Collection Log por item e por página, importado do JSON exportado pelo plugin Collection Log do RuneLite;
 - calculadoras de XP, Banked XP, combat level, margem do GE, drop chance, Prayer e suprimentos;
 - Gear Lab com boneco de equipamentos, busca por slot, ícones, atributos, DPS básico, presets e comparação;
 - Central de Slayer com task manual, bestiário de fraquezas e locais, métodos pessoais, block list e guia interativo de Turael Boosting;
@@ -24,4 +24,4 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 
 O projeto é uma aplicação estática e mantém os dados personalizados no armazenamento local do navegador. Atualizações de estrutura usam migração incremental e mantêm backups locais de segurança dos dados anteriores.
 
-Os níveis e KCs vêm do Wise Old Man. Quests, Diaries, Combat Achievements e Collection Log vêm do WikiSync; é necessário usar o plugin WikiSync no RuneLite e abrir as interfaces correspondentes no jogo para enviar esses registros. Catálogos e requisitos usam a OSRS Wiki, preços usam a API de preços da Wiki e equipamentos usam dados públicos derivados do cache do jogo, RuneLite e Wiki.
+Os níveis e KCs vêm do Wise Old Man. Quests, Diaries e Combat Achievements usam o WikiSync. O Collection Log é importado pelo botão próprio da aba a partir do JSON do plugin Collection Log do RuneLite; essa separação evita que um snapshot vazio apague itens já registrados. Catálogos e requisitos usam a OSRS Wiki, preços usam a API de preços da Wiki e equipamentos usam dados públicos derivados do cache do jogo, RuneLite e Wiki.

@@ -21,7 +21,7 @@ try{const cached=JSON.parse(localStorage.getItem(PROGRESSION_CATALOG_KEY)||'null
 if(!state.progression)state.progression=defaultState().progression;
 if(!state.calculators)state.calculators={saved:[]};
 if(!state.gearLab)state.gearLab={current:{},presets:[],selectedBossId:'',combatStyle:'melee',targetDefence:100,spellMaxHit:20};
-Object.assign(ui,{progressionTab:ui.progressionTab||'diaries',progressionSearch:'',diaryRegion:'all',diaryTier:'all',progressionIncomplete:true,caTier:'all',caMonster:'all',caType:'all',collectionSource:'all',calculatorTab:'skill',pvmTab:'passport',gearSlot:null,gearSearch:'',gearLimit:48,gearCompareId:null});
+Object.assign(ui,{progressionTab:ui.progressionTab||'diaries',progressionSearch:'',diaryRegion:'all',diaryTier:'all',progressionIncomplete:true,caTier:'all',caMonster:'all',caType:'all',collectionSource:'all',collectionImporting:false,calculatorTab:'skill',pvmTab:'passport',gearSlot:null,gearSearch:'',gearLimit:48,gearCompareId:null});
 
 const insertBeforeSettings=navItems.findIndex(item=>item[0]==='history');
 if(!navItems.some(item=>item[0]==='achievements'))navItems.splice(insertBeforeSettings,0,['achievements','✪','Conquistas']);
@@ -108,6 +108,50 @@ async function loadProgressionCatalogs(force=false){
 }
 async function syncAllProgression(){await syncQuests(false);await loadProgressionCatalogs(false);render()}
 
+function collectionPayloadInfo(payload){
+  const root=payload?.data||payload?.collectionLog||payload,obtained=new Set(),known=new Set();
+  function visit(value){
+    if(!value||typeof value!=='object')return;
+    if(Array.isArray(value)){value.forEach(visit);return}
+    const itemId=Number(value.id??value.item_id??value.itemId),hasItemShape=Number.isFinite(itemId)&&('obtained'in value||'quantity'in value||'count'in value||'item_name'in value||'name'in value);
+    if(hasItemShape){
+      known.add(itemId);
+      const hasProgress='obtained'in value||'quantity'in value||'count'in value;
+      const isObtained=value.obtained===true||Number(value.quantity)>0||Number(value.count)>0||(!hasProgress&&value.date!=null);
+      if(isObtained)obtained.add(itemId);
+    }
+    Object.values(value).forEach(visit);
+  }
+  visit(root?.items??root?.tabs??root);
+  if(Array.isArray(payload?.collection_log))payload.collection_log.map(Number).filter(Number.isFinite).forEach(itemId=>{known.add(itemId);obtained.add(itemId)});
+  const username=root?.username||root?.player_name_with_capitalization||root?.player||payload?.username||'';
+  const available=Number(root?.uniqueItems??root?.totalItems??root?.total_collections_available??payload?.collectionLogItemCount);
+  const checked=root?.last_checked,reportedTime=payload?.timestamp||root?.lastSync||root?.updatedAt||(Number.isFinite(Number(checked))?new Date(Number(checked)*1000).toISOString():null);
+  return {username,completed:[...obtained],itemCount:Number.isFinite(available)&&available>0?available:known.size||null,lastSync:reportedTime||new Date().toISOString()};
+}
+function updateCollectionGoals(){
+  const completed=[];
+  state.goals.filter(goal=>['collectionItem','collectionSource','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada pelo Collection Log importado.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
+  return completed;
+}
+function applyCollectionPayload(payload,source){
+  const info=collectionPayloadInfo(payload);
+  if(!info.completed.length&&!info.itemCount)throw new Error('nenhum item de Collection Log foi encontrado no arquivo');
+  if(info.username&&info.username.toLowerCase()!==state.username.toLowerCase()&&!confirm(`O arquivo parece pertencer a ${info.username}. Importar no personagem ${state.username} mesmo assim?`))return false;
+  state.progression.collectionLog.completed=info.completed;
+  state.progression.collectionLog.itemCount=info.itemCount;
+  state.progression.collectionLog.lastSync=info.lastSync;
+  state.progression.collectionLog.source=source;
+  const goals=updateCollectionGoals();
+  addHistory('sync','Collection Log atualizado',`${info.completed.length} item(ns) obtido(s) importados de ${source}.`);
+  save(`Collection Log: ${info.completed.length} item(ns)${goals.length?` · ${goals.length} meta(s) concluída(s)`:''}`);
+  return true;
+}
+async function importCollectionLog(file){
+  if(ui.collectionImporting)return;ui.collectionImporting=true;render();
+  try{const payload=JSON.parse(await file.text());applyCollectionPayload(payload,'JSON do RuneLite')}catch(error){toast(`Não foi possível importar o Collection Log: ${error.message}`)}finally{ui.collectionImporting=false;render()}
+}
+
 function progressSummaryCard(icon,title,value,detail,progress){return `<article class="progress-summary"><span class="summary-rune">${icon}</span><div><small>${esc(title)}</small><strong>${esc(value)}</strong><span>${esc(detail)}</span></div>${progressBar(progress)}</article>`}
 function achievementTabs(){return `<div class="rune-tabs"><button class="${ui.progressionTab==='diaries'?'active':''}" data-progression-tab="diaries">▤ Diaries</button><button class="${ui.progressionTab==='combat'?'active':''}" data-progression-tab="combat">⚔ Combat Achievements</button><button class="${ui.progressionTab==='collection'?'active':''}" data-progression-tab="collection">♜ Collection Log</button></div>`}
 function catalogLoading(){return `<section class="pvm-section catalog-loading">${emptyState('⌛','Consultando os registros da Wiki','Isso acontece somente na primeira abertura de cada catálogo.')}</section>`}
@@ -134,13 +178,14 @@ function collectionPanel(){
   const catalog=progressionCatalogs.collectionLog;if(!catalog.length)return progressionLoading?catalogLoading():emptyState('♜','Catálogo ainda não carregado',progressionError||'Atualize os registros para montar o Collection Log.',`<button class="primary-btn" data-load-progression>Atualizar registros</button>`);
   const done=collectionCompletedSet(),sources=[...new Set(catalog.flatMap(item=>item.sources||[]).filter(Boolean))].sort(),visible=catalog.filter(item=>ui.collectionSource==='all'||(item.sources||[]).includes(ui.collectionSource)).filter(item=>!ui.progressionIncomplete||!done.has(item.item_id)).filter(item=>(item.item_name+' '+(item.sources||[]).join(' ')).toLowerCase().includes(ui.progressionSearch.toLowerCase())).slice(0,300);
   const detected=state.progression.collectionLog.itemCount??done.size;
-  return `<div class="summary-grid">${progressSummaryCard('♜','Slots detectados',String(detected),'o RuneLite precisa enviar o Collection Log',safePercent(done.size,catalog.length))}${progressSummaryCard('◈','Itens identificados',`${done.size}/${catalog.length}`,'catálogo completo da Wiki',safePercent(done.size,catalog.length))}</div>${!done.size?`<div class="inline-notice"><strong>Nenhum item recebido ainda.</strong><span>Abra o Collection Log no RuneLite com o WikiSync ativo e depois sincronize aqui.</span></div>`:''}<div class="filterbar achievement-filters"><label class="search"><span>⌕</span><input data-progression-search value="${esc(ui.progressionSearch)}" placeholder="Buscar item ou atividade..."></label><select data-collection-source><option value="all">Todas as páginas/fontes</option>${sources.map(value=>`<option ${ui.collectionSource===value?'selected':''}>${esc(value)}</option>`).join('')}</select><label class="toggle-line"><input type="checkbox" data-progression-incomplete ${ui.progressionIncomplete?'checked':''}> Só pendentes</label>${ui.collectionSource!=='all'?`<button class="ghost-btn" data-linked-goal="collectionSource" data-source="${esc(ui.collectionSource)}">+ Meta desta página</button>`:''}</div><div class="collection-grid">${visible.map(item=>`<article class="collection-item ${done.has(item.item_id)?'is-complete':''}"><img src="https://static.runelite.net/cache/item/icon/${item.item_id}.png" alt="" loading="lazy" onerror="this.classList.add('image-error')"><div><strong>${esc(item.item_name)}</strong><small>${esc((item.sources||[]).slice(0,2).join(' · ')||'Fonte não catalogada')}</small><span>${done.has(item.item_id)?'✓ Obtido':'Não obtido'}</span></div><button data-linked-goal="collectionItem" data-item-id="${item.item_id}" data-name="${esc(item.item_name)}">＋</button></article>`).join('')||emptyState('✓','Tudo limpo neste filtro','Nenhum item pendente encontrado.')}</div>`;
+  const source=state.progression.collectionLog.source||'Ainda não importado',lastSync=state.progression.collectionLog.lastSync,total=detected||catalog.length;
+  return `<div class="collection-sync-card"><div><small>PROGRESSO DO COLLECTION LOG</small><h3>${esc(source)}</h3><p>${lastSync?`Última leitura: ${new Date(lastSync).toLocaleString('pt-BR')}`:'O WikiSync do botão superior não entrega o Collection Log a sites terceiros.'}</p></div><button class="primary-btn" data-import-collection>${ui.collectionImporting?'Importando...':'⇧ Importar JSON do RuneLite'}</button><details><summary>Como gerar o arquivo?</summary><ol><li>No RuneLite, instale ou ative o plugin <strong>Collection Log</strong>.</li><li>Abra o livro e visite as páginas que deseja registrar.</li><li>Clique com o botão direito no ícone ou seção do Collection Log e escolha <strong>Export</strong>.</li><li>Selecione aqui o JSON salvo em <code>%USERPROFILE%/.runelite/collectionlog/exports/</code>.</li></ol></details></div><div class="summary-grid">${progressSummaryCard('♜','Total disponível',String(total),'informado pelo arquivo importado',safePercent(done.size,total))}${progressSummaryCard('◈','Itens obtidos',`${done.size}/${total}`,'cruzados com o catálogo da Wiki',safePercent(done.size,total))}</div>${!done.size?`<div class="inline-notice"><strong>Nenhum item importado ainda.</strong><span>Exporte o JSON pelo plugin Collection Log do RuneLite e use o botão acima. Seus dados ficam salvos somente neste navegador.</span></div>`:''}<div class="filterbar achievement-filters"><label class="search"><span>⌕</span><input data-progression-search value="${esc(ui.progressionSearch)}" placeholder="Buscar item ou atividade..."></label><select data-collection-source><option value="all">Todas as páginas/fontes</option>${sources.map(value=>`<option ${ui.collectionSource===value?'selected':''}>${esc(value)}</option>`).join('')}</select><label class="toggle-line"><input type="checkbox" data-progression-incomplete ${ui.progressionIncomplete?'checked':''}> Só pendentes</label>${ui.collectionSource!=='all'?`<button class="ghost-btn" data-linked-goal="collectionSource" data-source="${esc(ui.collectionSource)}">+ Meta desta página</button>`:''}</div><div class="collection-grid">${visible.map(item=>`<article class="collection-item ${done.has(item.item_id)?'is-complete':''}"><img src="https://static.runelite.net/cache/item/icon/${item.item_id}.png" alt="" loading="lazy" onerror="this.classList.add('image-error')"><div><strong>${esc(item.item_name)}</strong><small>${esc((item.sources||[]).slice(0,2).join(' · ')||'Fonte não catalogada')}</small><span>${done.has(item.item_id)?'✓ Obtido':'Não obtido'}</span></div><button data-linked-goal="collectionItem" data-item-id="${item.item_id}" data-name="${esc(item.item_name)}">＋</button></article>`).join('')||emptyState('✓','Tudo limpo neste filtro','Nenhum item pendente encontrado.')}</div>`;
 }
 
 function achievementsPage(){
   if(!progressionCatalogs.diaries.length&&!progressionLoading)setTimeout(()=>loadProgressionCatalogs(false),0);
   const synced=state.progression.diaries.lastSync||state.quests.lastSync;
-  return `${sectionHead('WIKISYNC + WIKI','Diaries, Combat Achievements e Collection Log',`<button class="primary-btn" data-sync-progression>↻ Sincronizar ${esc(state.username)}</button>`)}<div class="sync-banner"><span class="sync-dot ${synced?'online':''}"></span><div><strong>${synced?'Dados do personagem conectados':'Aguardando primeira sincronização'}</strong><small>${synced?`Última leitura: ${new Date(synced).toLocaleString('pt-BR')}`:'O catálogo vem da Wiki; seu progresso vem do WikiSync.'}</small></div><button class="ghost-btn" data-load-progression>Atualizar catálogos</button></div>${achievementTabs()}<section class="achievement-panel">${ui.progressionTab==='diaries'?diariesPanel():ui.progressionTab==='combat'?combatPanel():collectionPanel()}</section>`;
+  return `${sectionHead('WIKISYNC + WIKI','Diaries, Combat Achievements e Collection Log',`<button class="primary-btn" data-sync-progression>↻ Quests, Diaries e CAs</button>`)}<div class="sync-banner"><span class="sync-dot ${synced?'online':''}"></span><div><strong>${synced?'WikiSync do personagem conectado':'Aguardando primeira sincronização'}</strong><small>${synced?`Quests/Diaries/CAs: ${new Date(synced).toLocaleString('pt-BR')} · Collection Log possui sincronização própria na aba.`:'O catálogo vem da Wiki; cada aba informa de onde vem o progresso.'}</small></div><button class="ghost-btn" data-load-progression>Atualizar catálogos</button></div>${achievementTabs()}<section class="achievement-panel">${ui.progressionTab==='diaries'?diariesPanel():ui.progressionTab==='combat'?combatPanel():collectionPanel()}</section>`;
 }
 
 function skillCalculator(){const selected=skill(ui.calcSkill||'Slayer')||state.skills[0];return `<form class="calculator-card" data-calc-skill><div class="calc-title"><span>✦</span><div><small>SKILL PLANNER</small><h3>XP, ações, tempo e custo</h3></div></div><div class="form-two"><label>Skill<select name="skill">${state.skills.map(item=>`<option ${item.name===selected.name?'selected':''}>${item.name}</option>`).join('')}</select></label><label>Meta de nível<input type="number" name="target" min="2" max="126" value="${Math.max(selected.current+1,selected.target)}"></label></div><div class="form-two"><label>XP por ação<input type="number" name="xpAction" min="0.01" step="0.01" value="100"></label><label>XP por hora<input type="number" name="xpHour" min="1" value="60000"></label></div><div class="form-two"><label>GP por ação<input type="number" name="gpAction" step="1" value="0"></label><label>XP atual <small>(opcional)</small><input type="number" name="currentXp" min="0" value="${selected.xp||xpForLevel(selected.current)}"></label></div><button class="primary-btn">Calcular jornada</button></form>`}
@@ -205,6 +250,7 @@ document.addEventListener('click',event=>{
   const button=event.target.closest('button,[data-linked-goal]');if(!button)return;
   if(button.dataset.progressionTab){ui.progressionTab=button.dataset.progressionTab;ui.progressionSearch='';render();return}
   if(button.hasAttribute('data-sync-progression')){syncAllProgression();return}
+  if(button.hasAttribute('data-import-collection')){chooseFile('.json,application/json',importCollectionLog);return}
   if(button.hasAttribute('data-load-progression')){loadProgressionCatalogs(true);return}
   if(button.dataset.caTierQuick){ui.caTier=button.dataset.caTierQuick;render();return}
   if(button.dataset.linkedGoal){createLinkedGoal(button);return}
