@@ -31,7 +31,18 @@ const osrsTracks = [
   {name:'Harmony',area:'Lumbridge',url:'https://oldschool.runescape.wiki/images/Harmony.ogg?e5abf'},
   {name:'Medieval',area:'Varrock',url:'https://oldschool.runescape.wiki/images/Medieval.ogg?1c180'},
   {name:'The Forlorn Homestead',area:'Hosidius',url:'https://oldschool.runescape.wiki/images/The_Forlorn_Homestead.ogg?05489'},
-  {name:'Life at Sea',area:'Shipyard',url:'https://oldschool.runescape.wiki/images/Life_at_Sea.ogg?1fc3a'}
+  {name:'Life at Sea',area:'Shipyard',url:'https://oldschool.runescape.wiki/images/Life_at_Sea.ogg?1fc3a'},
+  {name:'All Aboard',area:'Viagem marítima',url:'https://oldschool.runescape.wiki/images/All_Aboard.ogg?dbe80'},
+  {name:'Set Sail',area:'Viagem marítima',url:'https://oldschool.runescape.wiki/images/Set_Sail.ogg?6da54'},
+  {name:'Spirit of the Forest',area:'Florestas de Gielinor',url:'https://oldschool.runescape.wiki/images/Spirit_of_the_Forest.ogg?601e9'},
+  {name:'Magic Dance',area:'Gielinor',url:'https://oldschool.runescape.wiki/images/Magic_Dance.ogg?e69c2'},
+  {name:'Find My Way',area:'Gielinor',url:'https://oldschool.runescape.wiki/images/Find_My_Way.ogg?9041e'},
+  {name:'Dwarven Domain',area:'Terras dos anões',url:'https://oldschool.runescape.wiki/images/Dwarven_Domain.ogg?93e63'},
+  {name:'Courage',area:'Gielinor',url:'https://oldschool.runescape.wiki/images/Courage.ogg?99ece'},
+  {name:'Teklan',area:'Varlamore',url:'https://oldschool.runescape.wiki/images/Teklan.ogg?d712b'},
+  {name:'Monkey Trouble',area:'Ape Atoll',url:'https://oldschool.runescape.wiki/images/Monkey_Trouble.ogg?e23c3'},
+  {name:'The Sound of Guthix',area:'Templo de Guthix',url:'https://oldschool.runescape.wiki/images/The_Sound_of_Guthix.ogg?e1872'},
+  {name:'Temple Desecrated',area:'Templo antigo',url:'https://oldschool.runescape.wiki/images/Temple_Desecrated.ogg?d712b'}
 ];
 const moneyMakerSeed = [
   {id:'mm-vorkath',name:'Vorkath',category:'PvM',intensity:'high',gpHour:3000000,duration:60,skill:'Ranged',level:80,quest:'Dragon Slayer II',notes:'Edite a estimativa conforme seu gear e suas kills por hora.',resource:'Dragon bones e supplies'},
