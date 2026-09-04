@@ -1,0 +1,39 @@
+.topbar{grid-template-columns:auto auto minmax(0,1fr) auto}
+.icon-btn.mobile-only{display:none}
+.auto-progress{margin-top:12px;color:var(--muted);font-size:10px;text-align:right}
+.sidebar nav{overflow-x:hidden}
+.upcoming-config{display:grid;gap:6px}.upcoming-config>div{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px;border:1px solid var(--line);border-radius:8px}.upcoming-config aside{display:flex;gap:4px}.upcoming-config button{border:1px solid var(--line);border-radius:6px;background:var(--panel-2);color:var(--text)}
+@media(max-width:860px){.icon-btn.mobile-only{display:grid}}
+
+/* Cada status mantém a mesma linguagem visual em todas as telas. */
+.goal-card,.era-goals button,.unlock-list>button,.raid-card{--status-color:var(--accent);--status-rgb:216,167,79}
+.status-planned{--status-color:var(--blue);--status-rgb:112,174,203}
+.status-active{--status-color:var(--accent);--status-rgb:216,167,79}
+.status-paused{--status-color:var(--purple);--status-rgb:173,147,210}
+.status-done{--status-color:var(--green);--status-rgb:113,189,138}
+.status-archived{--status-color:#7c8581;--status-rgb:124,133,129}
+.status-new{--status-color:#c7a85c;--status-rgb:199,168,92}
+
+.goal-card{border-top-color:var(--status-color);background:linear-gradient(145deg,rgba(var(--status-rgb),.09),rgba(19,24,24,var(--card-alpha)) 42%);transition:transform .18s,border-color .18s,box-shadow .18s,background .18s}
+.goal-card:hover{transform:translateY(-3px);border-color:rgba(var(--status-rgb),.68);box-shadow:0 16px 38px rgba(0,0,0,.28),0 0 0 1px rgba(var(--status-rgb),.1),0 0 24px rgba(var(--status-rgb),.09)}
+.goal-card .progress i,.raid-card .progress i{background:linear-gradient(90deg,color-mix(in srgb,var(--status-color) 65%,#45351d),var(--status-color));box-shadow:0 0 9px rgba(var(--status-rgb),.4)}
+.goal-labels{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid rgba(var(--status-rgb),.26);border-radius:999px;background:rgba(var(--status-rgb),.12);color:var(--status-color);font-size:10px;font-weight:700}
+.status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.status-active .status-pill::before{animation:statusPulse 1.8s ease-in-out infinite}
+.goal-card.status-done h3{color:var(--green)}
+.goal-card.status-done::after{content:'✓';position:absolute;right:17px;bottom:13px;color:rgba(113,189,138,.1);font-size:54px;font-weight:800;line-height:1;pointer-events:none}
+.goal-card.status-archived{filter:saturate(.55);opacity:.8}
+
+.era-goals button,.unlock-list>button{position:relative;border-left:3px solid var(--status-color);background:linear-gradient(90deg,rgba(var(--status-rgb),.1),rgba(7,10,10,.3) 40%);transition:transform .16s,border-color .16s,background .16s,box-shadow .16s}
+.era-goals button:hover,.unlock-list>button:hover{transform:translateX(3px);border-color:var(--status-color);background:linear-gradient(90deg,rgba(var(--status-rgb),.18),rgba(7,10,10,.38) 55%);box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.era-goals button>span,.unlock-list>button>span{color:var(--status-color)}
+.unlock-list>button>span{background:rgba(var(--status-rgb),.13)}
+.era-goals button.status-done strong,.unlock-list>button.status-done strong{color:var(--green)}
+
+.raid-card{border-top:3px solid var(--status-color);background:linear-gradient(145deg,rgba(var(--status-rgb),.08),rgba(19,24,24,var(--card-alpha)) 45%)}
+.raid-card:hover{border-color:var(--status-color);box-shadow:0 14px 32px rgba(0,0,0,.25),0 0 20px rgba(var(--status-rgb),.08)}
+.raid-card .raid-mark{color:var(--status-color);background:rgba(var(--status-rgb),.13)}
+.raid-card small{color:var(--status-color)}
+
+@keyframes statusPulse{0%,100%{opacity:.55;box-shadow:0 0 3px currentColor}50%{opacity:1;box-shadow:0 0 11px currentColor}}

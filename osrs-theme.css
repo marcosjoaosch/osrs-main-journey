@@ -1,0 +1,840 @@
+@font-face {
+  font-family: "RuneScape";
+  src: url("https://oldschool.runescape.wiki/images/RuneScape.woff2?17907") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RuneScape Bold";
+  src: url("https://oldschool.runescape.wiki/images/RuneScape_Bold.woff2?514fd") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "RuneScape Small";
+  src: url("https://oldschool.runescape.wiki/images/RuneScape_Small.woff2?1ee0e") format("woff2");
+  font-display: swap;
+}
+
+:root {
+  --bg: #100d09;
+  --panel: #2b2924;
+  --panel-2: #38342c;
+  --line: #6e624d;
+  --text: #f3e5bd;
+  --muted: #b9aa87;
+  --green: #72c66a;
+  --red: #d85f4e;
+  --blue: #74a9c6;
+  --purple: #aa87c7;
+  --osrs-orange: #ff981f;
+  --osrs-yellow: #fff46a;
+  --stone-dark: #211f1a;
+  --stone-mid: #3c382f;
+  --stone-light: #81735a;
+  --wood-dark: #1b1009;
+  --wood-mid: #422819;
+  --parchment: #c8ad7a;
+  --ink: #21170d;
+  --radius: 6px;
+  --shadow: 0 18px 44px rgba(0, 0, 0, .45);
+  --font-game: "RuneScape", "Trebuchet MS", sans-serif;
+  --font-game-bold: "RuneScape Bold", "Trebuchet MS", sans-serif;
+}
+
+html {
+  scrollbar-color: #8b6a36 #17120d;
+  scrollbar-width: thin;
+}
+
+body {
+  background: #100d09;
+  color: var(--text);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .65);
+}
+
+body::before {
+  background-image:
+    linear-gradient(90deg, rgba(15, 10, 6, .73), rgba(9, 10, 9, .4) 42%, rgba(8, 8, 8, .7)),
+    url("assets/osrs-wallpaper.jpg");
+  background-position: center;
+  filter: saturate(.95) contrast(1.04);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 0, rgba(255, 188, 79, .08), transparent 35%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, transparent 65%, rgba(0,0,0,.34));
+}
+
+body[data-background="map"]::before {
+  background-image:
+    linear-gradient(90deg, rgba(24, 15, 8, .68), rgba(11, 10, 7, .48), rgba(8, 8, 7, .78)),
+    url("assets/osrs-map.jpg");
+  filter: sepia(.18) saturate(.9) contrast(1.05);
+}
+
+body[data-background="plain"]::before {
+  background:
+    radial-gradient(circle at 50% -20%, #3b2a17, transparent 44%),
+    linear-gradient(145deg, #18130d, #0b0a08 70%);
+}
+
+::selection {
+  color: #171009;
+  background: var(--osrs-orange);
+}
+
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: #17120d; }
+::-webkit-scrollbar-thumb {
+  border: 3px solid #17120d;
+  border-radius: 2px;
+  background: linear-gradient(#9a7d4a, #5e482a);
+}
+
+h1, h2, h3,
+.brand strong,
+.account-card > strong,
+.primary-btn,
+.ghost-btn,
+.icon-btn,
+.nav-item b,
+.pill,
+.tag,
+.count,
+.status-pill {
+  font-family: var(--font-game-bold);
+  letter-spacing: .025em;
+}
+
+h1 {
+  color: #fff3c9;
+  font-size: clamp(29px, 3.3vw, 42px);
+  line-height: .95;
+  text-shadow: 2px 2px 0 #27180d, 0 0 12px rgba(255, 152, 31, .16);
+}
+
+h2 {
+  color: #f5e7bd;
+  font-size: 25px;
+  line-height: 1.1;
+}
+
+h3 {
+  color: #f0dfb2;
+  font-size: 20px;
+}
+
+.eyebrow {
+  color: var(--osrs-orange);
+  font-family: "RuneScape Small", "DM Sans", sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-shadow: 1px 1px #000;
+}
+
+.app-shell { grid-template-columns: 270px minmax(0, 1fr); }
+
+.sidebar {
+  gap: 18px;
+  padding: 20px 16px 16px;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.36), transparent 9%, transparent 91%, rgba(0,0,0,.48)),
+    repeating-linear-gradient(4deg, rgba(255,255,255,.014) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, rgba(55, 35, 22, .97), rgba(23, 17, 12, .98) 47%, rgba(13, 13, 11, .98));
+  border-right: 4px ridge #79664a;
+  box-shadow: 10px 0 30px rgba(0,0,0,.38), inset -8px 0 16px rgba(0,0,0,.28);
+  backdrop-filter: blur(16px);
+}
+
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 6px 5px;
+  border: 1px solid rgba(206, 168, 103, .16);
+  pointer-events: none;
+}
+
+.brand {
+  position: relative;
+  z-index: 1;
+  min-height: 58px;
+  padding: 3px 5px 11px;
+  border-bottom: 1px solid rgba(214, 173, 98, .3);
+}
+
+.brand-crest {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 50px;
+  background: radial-gradient(circle, rgba(255, 180, 60, .14), transparent 68%);
+}
+
+.brand img {
+  width: 54px;
+  height: 50px;
+  filter: drop-shadow(0 3px 3px #000);
+}
+
+.brand strong {
+  color: #ffcb62;
+  font-size: 31px;
+  text-shadow: 2px 2px 0 #5d160d, -1px -1px 0 #20150c;
+}
+
+.brand span:not(.brand-crest) {
+  color: #cdbb8f;
+  font-size: 11px;
+}
+
+.account-card {
+  z-index: 1;
+  padding: 15px 15px 13px;
+  border: 2px ridge #77664d;
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(255, 187, 75, .12), transparent 30%),
+    linear-gradient(145deg, #403a30, #25231e 65%, #1a1915);
+  box-shadow: inset 0 1px rgba(255,255,255,.12), inset 0 -3px 6px rgba(0,0,0,.32), 0 8px 18px rgba(0,0,0,.28);
+}
+
+.account-card::after {
+  content: "✦";
+  color: rgba(255, 194, 84, .28);
+  text-shadow: 0 0 10px rgba(255, 152, 31, .25);
+}
+
+.account-card > strong {
+  color: #fff0bf;
+  font-size: 19px;
+}
+
+.account-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 11px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(181, 153, 103, .24);
+  color: #c6b993;
+  font-size: 10px;
+}
+
+.account-status .sync-dot { flex: 0 0 auto; }
+
+.sidebar nav {
+  z-index: 1;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.nav-item {
+  min-height: 45px;
+  padding: 6px 10px 6px 7px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #c9bb96;
+}
+
+.nav-item span {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #554a39;
+  border-radius: 3px;
+  color: #d5bd7a;
+  background: linear-gradient(145deg, #37332c, #1d1c19);
+  box-shadow: inset 1px 1px rgba(255,255,255,.08), inset -2px -2px rgba(0,0,0,.4);
+}
+
+.nav-item b { font-size: 16px; }
+
+.nav-item:hover {
+  color: var(--osrs-yellow);
+  border-color: rgba(160, 130, 77, .4);
+  background: linear-gradient(90deg, rgba(93, 62, 29, .58), rgba(53, 43, 30, .28));
+  transform: translateX(2px);
+}
+
+.nav-item:hover span {
+  color: var(--osrs-yellow);
+  border-color: #9b7942;
+  box-shadow: inset 1px 1px rgba(255,255,255,.12), inset -2px -2px rgba(0,0,0,.48), 0 0 10px rgba(255, 152, 31, .12);
+}
+
+.nav-item.active {
+  color: #fff3bd;
+  border-color: #8e7346;
+  background: linear-gradient(90deg, #61401f, rgba(54, 44, 31, .82));
+  box-shadow: inset 3px 0 var(--osrs-orange), inset 0 1px rgba(255,255,255,.08), 0 5px 12px rgba(0,0,0,.2);
+}
+
+.nav-item.active span {
+  color: #fff36e;
+  border-color: #a8894d;
+  background: linear-gradient(145deg, #5a4e3b, #29251e);
+}
+
+.sidebar-foot {
+  z-index: 1;
+  color: #7ab271;
+  font-family: "RuneScape Small", "DM Sans", sans-serif;
+  font-size: 11px;
+}
+
+.main {
+  max-width: 1600px;
+  padding-top: 22px;
+}
+
+.topbar {
+  position: relative;
+  min-height: 74px;
+  margin-bottom: 25px;
+  padding: 10px 16px;
+  border: 2px ridge #716047;
+  border-radius: 4px;
+  background:
+    linear-gradient(90deg, rgba(72, 60, 43, .94), rgba(41, 38, 32, .95) 45%, rgba(31, 29, 25, .96));
+  box-shadow: inset 0 1px rgba(255,255,255,.1), inset 0 -3px rgba(0,0,0,.24), 0 10px 25px rgba(0,0,0,.25);
+}
+
+.topbar::before,
+.topbar::after {
+  content: "◆";
+  position: absolute;
+  top: 50%;
+  color: #a9874f;
+  font-size: 10px;
+  transform: translateY(-50%);
+}
+
+.topbar::before { left: -6px; }
+.topbar::after { right: -6px; }
+
+.page-title { min-width: 0; }
+.page-title h1 { margin-top: 5px; }
+
+.top-total {
+  display: grid;
+  min-width: 77px;
+  padding: 6px 10px;
+  border-right: 1px solid rgba(194, 161, 102, .3);
+  text-align: right;
+}
+
+.top-total small {
+  color: var(--osrs-orange);
+  font-family: "RuneScape Small", sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.top-total strong {
+  color: #fff6cb;
+  font-family: var(--font-game-bold);
+  font-size: 18px;
+}
+
+.music-player {
+  display: flex;
+  align-items: center;
+  min-width: 330px;
+  height: 42px;
+  border: 2px ridge #705e43;
+  border-radius: 3px;
+  background: linear-gradient(#3e392f, #292720);
+  box-shadow: inset 0 1px rgba(255,255,255,.06), 0 3px 7px rgba(0,0,0,.26);
+  overflow: hidden;
+}
+
+.music-player > button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  flex: 0 0 34px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #5b4e3a;
+  color: #e1c78a;
+  background: linear-gradient(#474137, #2d2a24);
+  font-family: var(--font-game-bold);
+  font-size: 18px;
+}
+
+.music-player > button:hover { color: var(--osrs-yellow); background: linear-gradient(#5c4d37, #383026); }
+
+.music-note {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  flex: 0 0 30px;
+  color: var(--osrs-orange);
+  font-size: 16px;
+  text-shadow: 0 0 8px rgba(255, 179, 65, .38);
+}
+
+.music-player.playing .music-note { animation: musicPulse 1.05s ease-in-out infinite alternate; }
+
+@keyframes musicPulse {
+  to { color: var(--osrs-yellow); transform: translateY(-2px) rotate(-7deg) scale(1.12); }
+}
+
+.music-copy {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  padding: 3px 8px 2px 0;
+}
+
+.music-copy small {
+  color: var(--osrs-orange);
+  font-family: "RuneScape Small", sans-serif;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.music-copy b,
+.music-copy em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-copy b { color: #f2e3b6; font-family: var(--font-game-bold); font-size: 12px; }
+.music-copy em { color: #ad9c78; font-size: 8px; font-style: normal; }
+
+.music-volume {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 72px;
+  padding: 0 7px;
+  color: #c7ac70;
+  font-size: 8px;
+}
+
+.music-volume input { width: 48px; accent-color: var(--osrs-orange); cursor: pointer; }
+
+.icon-btn,
+.ghost-btn,
+.primary-btn,
+.inline-actions button,
+.quick-progress button,
+.task-row button,
+.boss-actions button,
+.raid-card > div button,
+.widget-actions button,
+.action-list button,
+.widget-list button {
+  border: 2px ridge #78674c;
+  border-radius: 3px;
+  color: #ead9ae;
+  background: linear-gradient(#4b4539, #302d27 55%, #25231f);
+  box-shadow: inset 0 1px rgba(255,255,255,.1), 0 2px 3px rgba(0,0,0,.35);
+  text-shadow: 1px 1px #000;
+}
+
+.icon-btn:hover,
+.ghost-btn:hover,
+.inline-actions button:hover,
+.quick-progress button:hover,
+.task-row button:hover,
+.boss-actions button:hover,
+.raid-card > div button:hover,
+.action-list button:hover,
+.widget-list button:hover {
+  border-color: #ae8a50;
+  color: var(--osrs-yellow);
+  background: linear-gradient(#5a4d38, #3d3428 58%, #2a251f);
+  box-shadow: inset 0 1px rgba(255,255,255,.14), 0 0 12px rgba(255, 152, 31, .13);
+}
+
+.primary-btn {
+  border-color: #d3a447;
+  color: #241607;
+  background: linear-gradient(#ffd371, #d99c36 56%, #aa6d1c);
+  box-shadow: inset 0 1px #fff0b0, inset 0 -2px #7a4814, 0 3px 0 #5f3813, 0 7px 13px rgba(0,0,0,.25);
+  text-shadow: 0 1px rgba(255,255,255,.28);
+}
+
+.primary-btn:hover {
+  color: #1c1106;
+  filter: brightness(1.08) saturate(1.08);
+}
+
+.primary-btn:active,
+.ghost-btn:active,
+.icon-btn:active { transform: translateY(2px); box-shadow: inset 0 2px 5px rgba(0,0,0,.35); }
+
+.text-btn {
+  color: var(--osrs-orange);
+  font-family: var(--font-game-bold);
+  font-size: 14px;
+  text-shadow: 1px 1px #000;
+}
+
+.text-btn:hover { color: var(--osrs-yellow); }
+
+.card,
+.widget,
+.pvm-section {
+  position: relative;
+  border: 2px ridge #71644f;
+  border-radius: var(--radius);
+  background:
+    repeating-linear-gradient(5deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
+    linear-gradient(145deg, rgba(62, 58, 48, var(--card-alpha)), rgba(31, 30, 26, var(--card-alpha)) 48%, rgba(24, 24, 21, var(--card-alpha)));
+  box-shadow: inset 0 1px rgba(255,255,255,.08), inset 0 -3px 7px rgba(0,0,0,.25), 0 10px 26px rgba(0,0,0,.28);
+  backdrop-filter: blur(14px);
+}
+
+.card:hover,
+.widget:hover,
+.pvm-section:hover {
+  border-color: #9b8055;
+  box-shadow: inset 0 1px rgba(255,255,255,.1), inset 0 -3px 7px rgba(0,0,0,.25), 0 14px 32px rgba(0,0,0,.36), 0 0 0 1px rgba(255, 190, 81, .05);
+}
+
+.widget-journey {
+  background:
+    linear-gradient(90deg, rgba(48, 31, 17, .88), rgba(25, 24, 21, .9)),
+    url("assets/osrs-wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.section-head {
+  position: relative;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(178, 148, 91, .23);
+}
+
+.section-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 78px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--osrs-orange), transparent);
+}
+
+.pill,
+.tag,
+.count,
+.status-pill {
+  border: 1px solid #655943;
+  border-radius: 3px;
+  background: linear-gradient(#454137, #2c2a25);
+  box-shadow: inset 0 1px rgba(255,255,255,.06);
+}
+
+.tag { color: #ded0a8; }
+
+.progress {
+  height: 10px;
+  padding: 2px;
+  border: 1px solid #5e513d;
+  border-radius: 2px;
+  background: #110f0c;
+  box-shadow: inset 0 2px 4px #000, 0 1px rgba(255,255,255,.04);
+}
+
+.progress i {
+  border-radius: 0;
+  background: linear-gradient(180deg, #ffe17d, color-mix(in srgb, var(--accent) 78%, #9a5516));
+  box-shadow: inset 0 1px rgba(255,255,255,.38), 0 0 8px rgba(255, 152, 31, .24);
+}
+
+.goal-card {
+  border-top-width: 3px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--status-rgb), .11), transparent 34%),
+    repeating-linear-gradient(5deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
+    linear-gradient(145deg, rgba(59, 55, 46, var(--card-alpha)), rgba(27, 27, 24, var(--card-alpha)));
+}
+
+.goal-card:hover { transform: translateY(-2px); }
+.goal-card .status-pill { color: var(--status-color); border-color: rgba(var(--status-rgb), .46); background: rgba(var(--status-rgb), .1); }
+.goal-card .progress i,
+.raid-card .progress i { background: linear-gradient(180deg, color-mix(in srgb, var(--status-color) 66%, white), var(--status-color)); }
+
+.quick-progress button { min-width: 42px; }
+.quick-progress .complete-btn { color: #8bdb80; }
+
+.today-item,
+.unlock-list > button,
+.mini-skills > div,
+.checkpoint,
+.checkpoint-panel > button,
+.task-row,
+.catalog-item,
+.raid-select label,
+.timeline article,
+.upcoming-config > div,
+.widget-list > div {
+  border: 1px solid #5c5342;
+  border-radius: 3px;
+  background: linear-gradient(145deg, rgba(48, 46, 39, .78), rgba(27, 27, 24, .84));
+  box-shadow: inset 0 1px rgba(255,255,255,.045), inset 0 -2px rgba(0,0,0,.16);
+}
+
+.today-item:hover,
+.checkpoint-panel > button:hover,
+.catalog-item:hover,
+.catalog-item.selected {
+  border-color: #9d7f4d;
+  background: linear-gradient(145deg, rgba(79, 61, 36, .72), rgba(36, 32, 26, .88));
+}
+
+.today-item input,
+.task-row input,
+.catalog-item input,
+.raid-select input,
+.switch input { accent-color: var(--osrs-orange); }
+
+.era-card { overflow: hidden; }
+
+.era-rail {
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 5px),
+    linear-gradient(#4a4031, #28251f);
+  border-right: 2px ridge #6b5b43;
+}
+
+.era-rail span {
+  border: 2px ridge #aa884d;
+  border-radius: 3px;
+  color: #fff2a1;
+  background: linear-gradient(#554936, #2d2922);
+  font-family: var(--font-game-bold);
+  box-shadow: 0 4px 8px rgba(0,0,0,.3);
+}
+
+.era-rail i { width: 3px; background: linear-gradient(var(--osrs-orange), #645033 65%, transparent); }
+
+.era-goals button { border-radius: 3px; }
+
+.filterbar {
+  border: 2px ridge #665943;
+  border-radius: 3px;
+  background: linear-gradient(145deg, rgba(58, 53, 44, .92), rgba(28, 27, 23, .94));
+  box-shadow: inset 0 1px rgba(255,255,255,.05), 0 7px 18px rgba(0,0,0,.22);
+}
+
+.form input,
+.form select,
+.form textarea,
+.inline-form input,
+.inline-form select,
+.filterbar select,
+.skill-row input {
+  border: 2px inset #625843;
+  border-radius: 2px;
+  color: #f1e5c3;
+  background: #191814;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,.55);
+}
+
+.form input:hover,
+.form select:hover,
+.form textarea:hover,
+.inline-form input:hover,
+.inline-form select:hover { border-color: #887044; }
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus,
+.inline-form input:focus,
+.inline-form select:focus {
+  border-color: var(--osrs-orange);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,.55), 0 0 0 2px rgba(255, 152, 31, .1);
+}
+
+.character-summary > div {
+  border: 2px ridge #6b5e48;
+  border-radius: 3px;
+  background: linear-gradient(145deg, #403b31, #26241f);
+  box-shadow: inset 0 1px rgba(255,255,255,.07), 0 7px 16px rgba(0,0,0,.24);
+}
+
+.character-summary strong,
+.skill-row > span,
+.checkpoint strong { color: #ffd66b; }
+
+.skill-row {
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+.skill-row:hover {
+  border-color: rgba(193, 153, 79, .3);
+  background: linear-gradient(90deg, rgba(103, 76, 35, .28), rgba(58, 50, 37, .12));
+}
+
+.skill-row img,
+.mini-skills img {
+  filter: drop-shadow(1px 2px 1px rgba(0,0,0,.8));
+}
+
+.boss-card,
+.raid-card {
+  border-radius: 4px;
+  background: linear-gradient(145deg, rgba(58, 54, 45, .95), rgba(27, 27, 24, .96));
+}
+
+.boss-art,
+.raid-mark {
+  border: 1px solid #62543d;
+  border-radius: 3px;
+  background: radial-gradient(circle, rgba(255, 180, 64, .14), rgba(20,18,14,.5) 72%);
+  box-shadow: inset 0 0 12px rgba(0,0,0,.28);
+}
+
+.boss-art img { filter: drop-shadow(0 5px 4px rgba(0,0,0,.55)); }
+
+.timeline::before { width: 3px; background: linear-gradient(#9b7741, #4b4030, transparent); }
+.timeline-dot { border: 2px ridge #756347; border-radius: 3px; color: #ffd369; background: linear-gradient(#514838, #26231d); }
+
+.drawer {
+  border-left: 4px ridge #7a674a;
+  background:
+    repeating-linear-gradient(4deg, rgba(255,255,255,.013) 0 1px, transparent 1px 5px),
+    linear-gradient(135deg, #3d382f, #24231f 55%, #191916);
+  box-shadow: -24px 0 55px rgba(0,0,0,.55), inset 4px 0 15px rgba(0,0,0,.18);
+}
+
+.drawer-head {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(190, 154, 88, .3);
+}
+
+.drawer-backdrop {
+  background: rgba(12, 8, 5, .7);
+  backdrop-filter: blur(4px) sepia(.2);
+}
+
+.toast {
+  border: 2px ridge #e2b85d;
+  border-radius: 3px;
+  color: #261707;
+  background: linear-gradient(#f7cf72, #c78a31);
+  box-shadow: inset 0 1px #fff1b1, 0 12px 30px rgba(0,0,0,.4);
+  font-family: var(--font-game-bold);
+  font-size: 16px;
+  text-shadow: 0 1px rgba(255,255,255,.35);
+}
+
+.empty > span,
+.event-icon { color: var(--osrs-orange); }
+
+.background-preview,
+.theme-presets button { border: 2px ridge #776448; border-radius: 3px; }
+
+.theme-presets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.theme-presets button:nth-child(1) { background-image: linear-gradient(110deg, rgba(0,0,0,.18), rgba(0,0,0,.64)), url("assets/osrs-wallpaper.jpg"); }
+.theme-presets button:nth-child(2) { background-image: linear-gradient(#0004,#0008), url("assets/osrs-map.jpg"); }
+.theme-presets button:nth-child(3) { background: #100d09; }
+
+.music-roster {
+  display: grid;
+  gap: 7px;
+  margin: 14px 0;
+}
+
+.music-roster button {
+  display: grid;
+  grid-template-columns: 31px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid #5c513f;
+  border-radius: 2px;
+  color: #d7c8a1;
+  background: linear-gradient(90deg, rgba(62,57,48,.93), rgba(35,32,27,.95));
+  text-align: left;
+}
+
+.music-roster button:hover,
+.music-roster button.active { color: var(--osrs-yellow); border-color: #a27e45; background: linear-gradient(90deg, #5b4931, #342c22); }
+.music-roster i {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border: 1px solid #76613e;
+  color: var(--osrs-orange);
+  background: rgba(13,11,8,.5);
+  font-style: normal;
+}
+.music-roster span { min-width: 0; }
+.music-roster strong,
+.music-roster small { display: block; }
+.music-roster strong { font-family: var(--font-game-bold); font-size: 15px; }
+.music-roster small { margin-top: 2px; color: var(--muted); font-size: 10px; }
+.music-roster b { color: #b9a576; font-family: "RuneScape Small", sans-serif; font-size: 9px; text-transform: uppercase; }
+
+.music-settings-volume {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin: 14px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.music-settings-volume input { grid-column: 1 / -1; width: 100%; accent-color: var(--osrs-orange); }
+.music-settings-volume output { color: var(--osrs-yellow); }
+.music-settings-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 1120px) {
+  .music-player { min-width: 132px; width: 132px; }
+  .music-copy, .music-volume { display: none; }
+}
+
+@media (max-width: 860px) {
+  .app-shell { display: block; }
+  .sidebar { border-right-width: 4px; }
+  .topbar {
+    margin: 0 0 20px;
+    padding: 9px 12px;
+    background: linear-gradient(90deg, rgba(68, 56, 40, .97), rgba(31, 29, 25, .97));
+  }
+  .main { padding: 12px 12px 64px; }
+  .music-player { min-width: 102px; width: 102px; }
+  .music-note { display: none; }
+}
+
+@media (max-width: 560px) {
+  h1 { font-size: 27px; }
+  h2 { font-size: 22px; }
+  h3 { font-size: 18px; }
+  .topbar { grid-template-columns: auto auto minmax(0, 1fr) auto; }
+  .top-total { display: none; }
+  .music-player { min-width: 102px; width: 102px; }
+  .music-player > button { flex: 1; }
+  .top-actions { gap: 6px; }
+  .card, .widget, .pvm-section { border-radius: 4px; }
+  .goal-card:hover { transform: none; }
+  .theme-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-active .status-pill::before { animation: none; }
+  .music-player.playing .music-note { animation: none; }
+}
+
+/* A animação de página acontece só ao trocar de aba, não a cada clique. */
+#content > * { animation: none; }
+.page-enter > * { animation: pageIn .3s ease; }

@@ -1,0 +1,241 @@
+body {
+  background-image: linear-gradient(rgba(12, 14, 15, .48), rgba(12, 14, 15, .78)), url('assets/osrs-wallpaper.jpg') !important;
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+.hero {
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(90deg, rgba(48, 35, 17, .78), rgba(28, 31, 31, .38)), url('assets/osrs-wallpaper.jpg') !important;
+  background-size: cover;
+  background-position: center 42%;
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, .32), 0 12px 35px rgba(0, 0, 0, .22);
+}
+.hero::after {
+  content: 'OSRS MAIN JOURNEY';
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  color: rgba(255, 231, 174, .48);
+  font-family: 'Uncial Antiqua';
+  letter-spacing: 2px;
+  font-size: 12px;
+  transform: rotate(-8deg);
+}
+.account-summary, .sync-card, .todo-panel {
+  background-image: linear-gradient(135deg, rgba(38, 45, 44, .88), rgba(22, 26, 28, .78)), url('assets/osrs-wallpaper.jpg') !important;
+  background-size: cover;
+  background-position: center 65%;
+}
+.card:not(.hero) {
+  background-image: linear-gradient(rgba(27, 32, 32, .92), rgba(19, 23, 24, .96)), url('assets/osrs-map.jpg') !important;
+  background-size: cover;
+  background-position: center;
+}
+
+/* OSRS interaction layer: cards behave like journal entries, not flat boxes. */
+.sidebar {
+  background-image: linear-gradient(rgba(11, 14, 15, .9), rgba(11, 14, 15, .96)), url('assets/osrs-map.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.sidebar::after {
+  content: 'ADVENTURE LOG';
+  position: absolute;
+  bottom: 26px;
+  left: 30px;
+  color: rgba(216, 167, 79, .35);
+  font-family: 'Uncial Antiqua';
+  letter-spacing: 2px;
+  font-size: 10px;
+  pointer-events: none;
+}
+.sidebar { position: relative }
+.nav-item {
+  transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.nav-item:hover {
+  transform: translateX(4px);
+  color: var(--gold2);
+  background: linear-gradient(90deg, rgba(216, 167, 79, .16), transparent);
+}
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(216, 167, 79, .2), rgba(53, 59, 57, .55));
+}
+.account-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, border-color .25s ease;
+}
+.account-card::after {
+  content: '✦';
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  color: rgba(240, 201, 118, .35);
+  font-size: 32px;
+}
+.account-card:hover { transform: translateY(-3px); border-color: var(--gold) }
+.card {
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background-position .4s ease;
+}
+.card:hover {
+  border-color: rgba(216, 167, 79, .62);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .28), inset 0 1px rgba(255, 229, 168, .06);
+  background-position: 54% 46%;
+}
+.hero:hover { transform: translateY(-4px); border-color: var(--gold2) }
+.hero h2 { text-shadow: 0 2px 10px rgba(0, 0, 0, .45) }
+.category {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.category::after {
+  content: 'ABRIR CAMINHO →';
+  position: absolute;
+  right: 16px;
+  bottom: 13px;
+  color: rgba(242, 234, 219, .42);
+  font-size: 9px;
+  letter-spacing: 1px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: .2s ease;
+}
+.category:hover { transform: translateY(-6px); box-shadow: 0 16px 30px rgba(0,0,0,.3) }
+.category:hover::after { opacity: 1; transform: translateX(0) }
+.category[data-category="Progresso"] { border-top: 3px solid var(--gold) }
+.category[data-category="PvM"] { border-top: 3px solid var(--red) }
+.category[data-category="Relaxar"] { border-top: 3px solid var(--green) }
+.category[data-category="Dinheiro"] { border-top: 3px solid var(--purple) }
+.goal-card:hover { transform: translateY(-4px) }
+.goal-card.goal-complete { border-color: rgba(113, 189, 138, .8); border-top-color: var(--green) }
+.goal-card.goal-complete .pill { background: rgba(113, 189, 138, .2); color: var(--green) }
+.goal-card.goal-complete:hover { box-shadow: 0 14px 34px rgba(44, 144, 84, .18), inset 0 1px rgba(183, 255, 204, .12) }
+.goal-card.goal-complete .progress i { background: linear-gradient(90deg, #39875b, var(--green)); box-shadow: 0 0 10px rgba(113, 189, 138, .45) }
+.progress-action:hover { color: var(--gold2); border-color: var(--gold) }
+.complete-action:hover { color: var(--green); border-color: var(--green) }
+.goal-actions .ghost-btn, .roadmap-actions .ghost-btn, .summary-edit, .sync-card .ghost-btn {
+  transition: .18s ease;
+}
+.goal-actions .ghost-btn:hover, .roadmap-actions .ghost-btn:hover, .summary-edit:hover, .sync-card .ghost-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(216, 167, 79, .12);
+}
+.list-item:hover, .roadmap-goal:hover, .todo-row:hover .todo-item {
+  border-color: rgba(216, 167, 79, .6);
+  background-color: rgba(216, 167, 79, .07);
+}
+.roadmap-goal { transition: .18s ease; }
+.roadmap-goal:hover { transform: translateX(5px); }
+.skill { padding: 7px 8px; border-radius: 8px; transition: .18s ease; }
+.skill:hover { background: rgba(216, 167, 79, .08); transform: translateX(4px) }
+.skill-name { display: flex; align-items: center; gap: 7px }
+.skill-name img { width: 20px; height: 20px; image-rendering: pixelated }
+.skill-summary div { transition: .2s ease; }
+.skill-summary div:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(216, 167, 79, .1) }
+.todo-row { transition: .18s ease; }
+.todo-actions { opacity: .35; transition: .18s ease; }
+.todo-row:hover .todo-actions, .todo-row:focus-within .todo-actions { opacity: 1 }
+.pill, .tag { transition: .18s ease; }
+.pill:hover, .tag:hover { filter: brightness(1.18); box-shadow: 0 0 0 3px rgba(216, 167, 79, .08) }
+.primary-btn { box-shadow: 0 4px 0 #8e6725; transition: transform .15s ease, box-shadow .15s ease, filter .15s ease }
+.primary-btn:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 6px 0 #8e6725 }
+.primary-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #8e6725 }
+.focus-btn:hover, .home-btn:hover { box-shadow: 0 0 18px rgba(216, 167, 79, .18) }
+.progress { box-shadow: inset 0 1px 2px rgba(0,0,0,.5) }
+.progress i { background: linear-gradient(90deg, #b77b29, var(--gold2)); box-shadow: 0 0 8px rgba(240, 201, 118, .35) }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important }
+}
+
+/* Motion layer: a calm journal-opening feel. */
+#content > * {
+  animation: page-in .42s cubic-bezier(.2, .75, .25, 1) both;
+}
+#content > *:nth-child(2) { animation-delay: .06s }
+#content > *:nth-child(3) { animation-delay: .12s }
+.grid > .card, .list > .list-item, .roadmap-item {
+  animation: rise-in .38s cubic-bezier(.2, .75, .25, 1) both;
+}
+.grid > :nth-child(2) { animation-delay: .05s }
+.grid > :nth-child(3) { animation-delay: .1s }
+.grid > :nth-child(4) { animation-delay: .15s }
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 220, 133, .13) 45%, transparent 65%);
+  transform: translateX(-120%);
+  animation: quest-shine 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero > * { position: relative; z-index: 1 }
+.progress i {
+  position: relative;
+  overflow: hidden;
+}
+.progress i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+  transform: translateX(-100%);
+  animation: progress-glint 3.8s ease-in-out infinite;
+}
+.save-status { animation: status-pulse 3s ease-in-out infinite }
+.toast.show { animation: toast-in .24s ease both }
+@keyframes page-in { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(12px) scale(.985) } to { opacity: 1; transform: translateY(0) scale(1) } }
+@keyframes quest-shine { 0%, 65% { transform: translateX(-120%) } 82%, 100% { transform: translateX(120%) } }
+@keyframes progress-glint { 0%, 55% { transform: translateX(-100%) } 75%, 100% { transform: translateX(100%) } }
+@keyframes status-pulse { 0%, 100% { opacity: .65 } 50% { opacity: 1 } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(18px) scale(.96) } to { opacity: 1; transform: translateY(0) scale(1) } }
+
+.dashboard-editor {
+  margin-bottom: 16px;
+  border-color: var(--gold);
+  animation: page-in .3s ease both;
+}
+.todo-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+  margin-bottom: 16px;
+}
+.todo-summary .section-head { flex: 0 0 auto; margin-right: auto }
+.summary-todos { display: flex; flex-wrap: wrap; gap: 8px }
+.summary-todo { display: flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: rgba(0,0,0,.18); color: var(--text); cursor: pointer; transition: .18s ease }
+.summary-todo:hover { border-color: var(--gold); transform: translateY(-2px) }
+.summary-todo input { accent-color: var(--green) }
+.summary-todo.done span { color: var(--muted); text-decoration: line-through }
+.dashboard-focus-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  align-items: end;
+}
+.dashboard-focus-form label, .upcoming-add {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dashboard-focus-form select, .upcoming-add select {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #111516;
+  color: var(--text)
+}
+.upcoming-editor { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 16px }
+.upcoming-editor h3 { margin: 0 0 10px; font-size: 14px }
+.upcoming-edit-list { display: grid; gap: 7px }
+.upcoming-edit-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: rgba(0,0,0,.16) }
+.upcoming-edit-item .ghost-btn { padding: 5px 8px; font-size: 12px }
+.upcoming-add { display: flex; grid-template-columns: 1fr auto; margin-top: 10px }
+@media(max-width:700px) { .dashboard-focus-form { grid-template-columns: 1fr } .upcoming-edit-item { align-items: flex-start; flex-direction: column } }
