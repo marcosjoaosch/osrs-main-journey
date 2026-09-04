@@ -18,6 +18,7 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 - Collection Log por item e por página, sincronizado pelo WikiSync;
 - calculadoras de XP, Banked XP, combat level, margem do GE, drop chance, Prayer e suprimentos;
 - Gear Lab com boneco de equipamentos, busca por slot, ícones, atributos, DPS básico, presets e comparação;
+- Central de Slayer com task manual, bestiário de fraquezas e locais, métodos pessoais, block list e guia interativo de Turael Boosting;
 - recomendador de atividades por tempo, intensidade e objetivo;
 - temas e trilha sonora inspirados em Gielinor.
 
