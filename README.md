@@ -17,6 +17,7 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 - Combat Achievements com catálogo da Wiki, pontos, recompensas e metas automáticas;
 - Collection Log por item e por página, importado do `collection_log.json` gerado pelo plugin Character Export do RuneLite;
 - Banco por personagem, importado do `bank.json` do Character Export, com caixa em moedas e valor negociável estimado pela OSRS Wiki;
+- Gear Lab com defesas, formas, fraquezas e resumo estratégico do alvo vindos da OSRS Wiki, usados no cálculo de precisão e DPS;
 - calculadoras de XP, Banked XP, combat level, margem do GE, drop chance, Prayer e suprimentos;
 - Gear Lab com boneco de equipamentos, busca por slot, ícones, atributos, DPS básico, presets e comparação;
 - Central de Slayer com task manual, bestiário de fraquezas e locais, métodos pessoais, block list e guia interativo de Turael Boosting;
