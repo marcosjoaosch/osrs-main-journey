@@ -838,3 +838,39 @@ h3 {
 /* A animação de página acontece só ao trocar de aba, não a cada clique. */
 #content > * { animation: none; }
 .page-enter > * { animation: pageIn .3s ease; }
+
+/* Mantém renders altos ou largos da Wiki dentro dos retratos de PvM. */
+.boss-art,
+.catalog-thumb,
+.boss-editor-preview {
+  overflow: hidden;
+  contain: paint;
+}
+
+.boss-art img,
+.catalog-thumb img {
+  display: block;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+  object-position: center;
+}
+
+.boss-art img {
+  max-width: 52px !important;
+  max-height: 52px !important;
+}
+
+.catalog-thumb img {
+  max-width: 28px !important;
+  max-height: 28px !important;
+}
+
+.boss-editor-preview img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: calc(100% - 16px);
+  max-height: 134px;
+  object-fit: contain;
+}
