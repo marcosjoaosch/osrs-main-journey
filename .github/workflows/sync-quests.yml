@@ -20,7 +20,7 @@ jobs:
           curl --fail --silent --show-error --location "https://sync.runescape.wiki/runelite/player/samurai_jao/STANDARD" --output /tmp/quest-data.json
           curl --fail --silent --show-error --location "https://sync.runescape.wiki/runelite/player/Iron%20Samuka/STANDARD" --output /tmp/quest-data-iron-samuka.json
 
-      - name: Atualizar apenas quando as quests mudarem
+      - name: Atualizar quando qualquer progresso do WikiSync mudar
         run: |
           python - <<'PY'
           import json
@@ -33,7 +33,11 @@ jobs:
           for source, target in pairs:
               fresh = json.loads(source.read_text(encoding='utf-8'))
               current = json.loads(target.read_text(encoding='utf-8')) if target.exists() else {}
-              if fresh.get('quests') != current.get('quests'):
+              tracked = (
+                  'quests', 'achievement_diaries', 'combat_achievements',
+                  'collection_log', 'collectionLogItemCount', 'levels'
+              )
+              if any(fresh.get(key) != current.get(key) for key in tracked):
                   target.write_text(json.dumps(fresh, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 

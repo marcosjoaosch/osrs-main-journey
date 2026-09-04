@@ -1,6 +1,7 @@
 const STORE_KEY = 'osrs-main-journey-v3';
 const PROFILES_KEY = 'osrs-main-journey-profiles-v1';
 const SAFETY_BACKUP_KEY = 'osrs-main-journey-before-economy-v1';
+const EXPANSION_BACKUP_KEY = 'osrs-main-journey-before-progression-suite-v1';
 const OLD_KEY = 'osrs-main-journey-v2';
 const TODO_KEY = 'osrs-main-journey-todos-v1';
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -80,6 +81,13 @@ function defaultState() {
     gains:{period:'week',xp:0,ehp:0,bossKc:0,lastSync:null},
     economy:{cash:0,geTax:2,watchlist:[4151,12924,11840,2434],moneyMakers:moneyMakerSeed.map(item=>({...item})),sessions:[],upgrades:[]},
     planner:{skillPlans:[],routines:routineSeed.map(item=>({...item})),drops:[],checkpoints:[]},
+    progression:{
+      diaries:{catalog:[],data:{},lastSync:null,source:'',catalogVersion:0},
+      combatAchievements:{catalog:[],completed:[],lastSync:null,source:'',catalogVersion:0},
+      collectionLog:{catalog:[],completed:[],itemCount:null,lastSync:null,source:'',catalogVersion:0}
+    },
+    calculators:{saved:[]},
+    gearLab:{current:{},presets:[],selectedBossId:'',combatStyle:'melee',targetDefence:100,spellMaxHit:20},
     history:[{id:id('event'),type:'milestone',title:'Quest Cape iniciada',detail:'A Era 1 está em andamento.',date:new Date().toISOString()}],
     preferences:{accent:'#d8a74f',background:'wallpaper',cardOpacity:92,density:'comfortable',motion:true,startPage:'dashboard',sidebarCompact:false,customBackground:'',musicTrack:0,musicVolume:35}
   };
@@ -121,6 +129,7 @@ function loadProfileHub(initialState){
 }
 
 function preservePreEconomyBackup(){try{if(localStorage.getItem(SAFETY_BACKUP_KEY))return;const profiles=localStorage.getItem(PROFILES_KEY),legacy=localStorage.getItem(STORE_KEY);if(profiles||legacy)localStorage.setItem(SAFETY_BACKUP_KEY,profiles||legacy)}catch{}}
+function preservePreExpansionBackup(){try{if(localStorage.getItem(EXPANSION_BACKUP_KEY))return;const profiles=localStorage.getItem(PROFILES_KEY),legacy=localStorage.getItem(STORE_KEY);if(profiles||legacy)localStorage.setItem(EXPANSION_BACKUP_KEY,profiles||legacy)}catch{}}
 
 function migrate() {
   const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
@@ -137,9 +146,10 @@ function migrate() {
   if (old.bosses?.length) { next.bosses.selected=[]; old.bosses.forEach(([name,kc])=>{ let item=next.bosses.catalog.find(b=>b.name===name); if(!item){item={id:`custom-${slug(name)}`,name,category:'Personalizado',wiki:name};next.bosses.catalog.push(item)} next.bosses.selected.push(item.id); next.bosses.progress[item.id]={kc:Number(kc)||0,target:old.pvmDetails?.[name]?.target||25,status:old.pvmDetails?.[name]?.state||'Nunca tentei',best:old.pvmDetails?.[name]?.best||'',gear:old.pvmDetails?.[name]?.gear||'',notes:old.pvmDetails?.[name]?.notes||'',liked:!!old.pvmDetails?.[name]?.liked,project:!!old.pvmDetails?.[name]?.project,image:old.pvmDetails?.[name]?.image||''}; }); }
   return next;
 }
-function mergeDefaults(saved) { const base=defaultState(),background=saved.preferences?.background==='slideshow'?'wallpaper':saved.preferences?.background,dashboard={...base.dashboard,...saved.dashboard};dashboard.widgets=[...(saved.dashboard?.widgets||base.dashboard.widgets),...base.dashboard.widgets.filter(key=>!(saved.dashboard?.widgets||[]).includes(key))];return {...base,...saved,dashboard,quests:{...base.quests,...saved.quests},bosses:{...base.bosses,...saved.bosses},raids:{...base.raids,...saved.raids,items:{...base.raids.items,...saved.raids?.items}},gains:{...base.gains,...saved.gains},economy:{...base.economy,...saved.economy,moneyMakers:saved.economy?.moneyMakers||base.economy.moneyMakers,sessions:saved.economy?.sessions||[],upgrades:saved.economy?.upgrades||[],watchlist:saved.economy?.watchlist||base.economy.watchlist},planner:{...base.planner,...saved.planner,skillPlans:saved.planner?.skillPlans||[],routines:saved.planner?.routines||base.planner.routines,drops:saved.planner?.drops||[],checkpoints:saved.planner?.checkpoints||[]},preferences:{...base.preferences,...saved.preferences,background:background||base.preferences.background}}; }
+function mergeDefaults(saved) { const base=defaultState(),background=saved.preferences?.background==='slideshow'?'wallpaper':saved.preferences?.background,dashboard={...base.dashboard,...saved.dashboard};dashboard.widgets=[...(saved.dashboard?.widgets||base.dashboard.widgets),...base.dashboard.widgets.filter(key=>!(saved.dashboard?.widgets||[]).includes(key))];return {...base,...saved,dashboard,quests:{...base.quests,...saved.quests},bosses:{...base.bosses,...saved.bosses},raids:{...base.raids,...saved.raids,items:{...base.raids.items,...saved.raids?.items}},gains:{...base.gains,...saved.gains},economy:{...base.economy,...saved.economy,moneyMakers:saved.economy?.moneyMakers||base.economy.moneyMakers,sessions:saved.economy?.sessions||[],upgrades:saved.economy?.upgrades||[],watchlist:saved.economy?.watchlist||base.economy.watchlist},planner:{...base.planner,...saved.planner,skillPlans:saved.planner?.skillPlans||[],routines:saved.planner?.routines||base.planner.routines,drops:saved.planner?.drops||[],checkpoints:saved.planner?.checkpoints||[]},progression:{...base.progression,...saved.progression,diaries:{...base.progression.diaries,...saved.progression?.diaries},combatAchievements:{...base.progression.combatAchievements,...saved.progression?.combatAchievements},collectionLog:{...base.progression.collectionLog,...saved.progression?.collectionLog}},calculators:{...base.calculators,...saved.calculators,saved:saved.calculators?.saved||[]},gearLab:{...base.gearLab,...saved.gearLab,current:{...base.gearLab.current,...saved.gearLab?.current},presets:saved.gearLab?.presets||[]},preferences:{...base.preferences,...saved.preferences,background:background||base.preferences.background}}; }
 function normalizeStatus(value='') { const v=value.toLowerCase(); return v.includes('concl')?'done':v.includes('andamento')?'active':v.includes('paus')?'paused':'planned'; }
 preservePreEconomyBackup();
+preservePreExpansionBackup();
 const migratedState=migrate();
 let profileHub=loadProfileHub(migratedState);
 function activeProfile(){return profileHub.profiles.find(profile=>profile.id===profileHub.activeId)||profileHub.profiles[0]}
@@ -423,7 +433,19 @@ document.addEventListener('submit',async event=>{
   if(form.closest('.drawer')&&!event.submitter?.matches('[data-drawer-save]'))return;
   const data=new FormData(form);if(form.closest('.drawer')){delete ui.drawerDrafts[drawerKey()];ui.skipDrawerDraft=true}
   if(form.matches('[data-profile-form]')){const profileId=data.get('id'),name=data.get('name').trim(),username=data.get('username').trim(),accountType=data.get('accountType'),duplicate=profileHub.profiles.find(profile=>profile.id!==profileId&&profile.username.toLowerCase()===username.toLowerCase());if(duplicate){toast('Esse personagem já está cadastrado.');return}if(profileId){const profile=profileHub.profiles.find(item=>item.id===profileId),changedNick=profile.username.toLowerCase()!==username.toLowerCase();profile.name=name;profile.username=username;profile.accountType=accountType;const profileState=profile.id===profileHub.activeId?state:profile.state;profileState.account=name;profileState.username=username;if(changedNick){profileState.lastSync=null;profileState.quests={items:[],lastSync:null,source:''}}profile.state=profileState;persistProfiles();ui.drawer=null;save('Personagem atualizado');render()}else{const preset=data.get('preset')||'blank',profile={id:id('profile'),name,username,accountType,preset,createdAt:new Date().toISOString(),state:presetState(preset,username,name)};activeProfile().state=state;profileHub.profiles.push(profile);profileHub.activeId=profile.id;state=mergeDefaults(profile.state);persistProfiles();ui.drawer=null;navigate('dashboard');toast(`${name} criado`);await syncAccount();await syncQuests(true)}return}
-  if(form.matches('[data-goal-form]')){const goalId=data.get('id'),mode=data.get('mode'),questName=data.get('questName')||null;if(mode==='quest'&&!questName){toast('Selecione a quest que será acompanhada.');return}let goal=goalId?goalById(goalId):null;const before=goal?.status;if(!goal){goal={id:id('goal'),priority:state.goals.length+1};state.goals.push(goal)}Object.assign(goal,{title:data.get('title').trim(),description:data.get('description').trim(),type:mode==='quest'?'quest':data.get('type'),status:data.get('status'),mode,eraId:data.get('eraId')||null,questName,skill:data.get('skill')||null,bossId:data.get('bossId')||null,raidId:data.get('raidId')||null,target:Number(data.get('target'))||100,progress:Number(data.get('progress'))||0});if(mode==='quest'&&Number(questByName(questName)?.state)===2)goal.status='done';if(goal.status==='done'&&before!=='done')addHistory('goal',`${goal.title} concluída`,'Meta finalizada.');save(goalId?'Meta atualizada':'Meta criada e vinculada ao Roadmap');ui.drawer=null;render();return}
+  if(form.matches('[data-goal-form]')){
+    const goalId=data.get('id'),mode=data.get('mode'),questName=data.get('questName')||null,diaryTarget=String(data.get('diaryTarget')||'').split('|');
+    if(mode==='quest'&&!questName){toast('Selecione a quest que será acompanhada.');return}
+    if(mode==='diaryTask'&&diaryTarget.length<3){toast('Selecione a tarefa da Diary.');return}
+    if(mode==='diaryTier'&&!(data.get('diaryRegion')&&data.get('diaryTier'))){toast('Informe a região e o tier da Diary.');return}
+    if(mode==='combatAchievement'&&!data.get('caId')){toast('Selecione o Combat Achievement.');return}
+    if(mode==='collectionItem'&&!data.get('collectionItemId')){toast('Selecione o item do Collection Log.');return}
+    if(mode==='collectionSource'&&!data.get('collectionSource')){toast('Selecione a página do Collection Log.');return}
+    let goal=goalId?goalById(goalId):null;const before=goal?.status;if(!goal){goal={id:id('goal'),priority:state.goals.length+1};state.goals.push(goal)}
+    Object.assign(goal,{title:data.get('title').trim(),description:data.get('description').trim(),type:mode==='quest'?'quest':data.get('type'),status:data.get('status'),mode,eraId:data.get('eraId')||null,questName,skill:data.get('skill')||null,bossId:data.get('bossId')||null,raidId:data.get('raidId')||null,target:Number(data.get('target'))||100,progress:Number(data.get('progress'))||0,diaryRegion:mode==='diaryTask'?diaryTarget[0]:(data.get('diaryRegion')||null),diaryTier:mode==='diaryTask'?diaryTarget[1]:(data.get('diaryTier')||null),diaryTaskIndex:mode==='diaryTask'?Number(diaryTarget[2]):null,caId:data.get('caId')?Number(data.get('caId')):null,collectionItemId:data.get('collectionItemId')?Number(data.get('collectionItemId')):null,collectionSource:data.get('collectionSource')||null,components:data.getAll('components')});
+    if(['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','gearLoadout','composite'].includes(mode)&&goalProgress(goal)>=100)goal.status='done';
+    if(goal.status==='done'&&before!=='done')addHistory('goal',`${goal.title} concluída`,'Meta finalizada.');save(goalId?'Meta atualizada':'Meta criada e vinculada ao Roadmap');ui.drawer=null;render();return
+  }
   if(form.matches('[data-era-form]')){const eraId=data.get('id');let era=state.eras.find(item=>item.id===eraId);if(!era){era={id:id('era'),order:state.eras.length};state.eras.push(era)}era.title=data.get('title').trim();era.description=data.get('description').trim();save(eraId?'Capítulo atualizado':'Capítulo criado');ui.drawer=null;render();return}
   if(form.matches('[data-task-form]')){state.tasks.push({id:id('task'),text:data.get('text').trim(),done:false,goalId:data.get('goalId')||null});save('Ação adicionada');render();return}
   if(form.matches('[data-task-edit-form]')){const task=state.tasks.find(item=>item.id===data.get('id'));task.text=data.get('text').trim();task.goalId=data.get('goalId')||null;save('Ação atualizada');ui.drawer=null;render();return}
@@ -472,8 +494,18 @@ async function syncQuests(silent=false){
     state.quests.items=entries.map(([name,value])=>({name,state:Number(value)}));
     state.quests.lastSync=payload.timestamp||new Date().toISOString();
     state.quests.source=source;
+    state.progression.diaries.data=payload.achievement_diaries||{};
+    state.progression.diaries.lastSync=payload.timestamp||new Date().toISOString();
+    state.progression.diaries.source=source;
+    state.progression.combatAchievements.completed=(payload.combat_achievements||[]).map(Number).filter(Number.isFinite);
+    state.progression.combatAchievements.lastSync=payload.timestamp||new Date().toISOString();
+    state.progression.combatAchievements.source=source;
+    state.progression.collectionLog.completed=(payload.collection_log||[]).map(Number).filter(Number.isFinite);
+    state.progression.collectionLog.itemCount=Number.isFinite(Number(payload.collectionLogItemCount))?Number(payload.collectionLogItemCount):null;
+    state.progression.collectionLog.lastSync=payload.timestamp||new Date().toISOString();
+    state.progression.collectionLog.source=source;
     const completed=[];
-    state.goals.filter(goal=>goal.mode==='quest'&&goal.status!=='archived').forEach(goal=>{const quest=questByName(goal.questName);if(!quest)return;if(Number(quest.state)===2&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pelo WikiSync.')}else if(Number(quest.state)===1&&goal.status==='planned')goal.status='active'});
+    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
     save(silent?'Quests sincronizadas':completed.length?`${completed.length} meta(s) de quest concluída(s)`:'Quests atualizadas',silent);
   }catch(error){if(!silent)toast(`Não foi possível atualizar as quests: ${error.message}`)}finally{ui.questSyncing=false;render()}
 }
