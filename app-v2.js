@@ -86,7 +86,7 @@ function defaultState() {
     skills:skillSeed.map(([name,current,target]) => ({name,current,target,xp:0})), eras, goals,
     dashboard:{focus:['goal-qc','goal-rc','goal-toa'],upcoming:['goal-qc','goal-hard'],widgets:['today','journey','focus','upcoming','character','economy','recent'],hidden:[]},
     tasks:[{id:id('task'),text:'Fazer 1 nível de Runecraft',done:false,goalId:'goal-rc'},{id:id('task'),text:'Fazer 1 quest de requisito',done:false,goalId:'goal-qc'},{id:id('task'),text:'Fazer herb run',done:false,goalId:null}],
-    quests:{items:[],lastSync:null,source:''},
+    quests:{items:[],lastSync:null,lastChecked:null,source:'',connection:'',syncError:''},
     bosses:{catalog:featuredBosses.map(([bossId,name,category]) => ({id:bossId,name,category,wiki:name})),selected:featuredBosses.slice(0,8).map(row=>row[0]),progress:{},imagesVersion:0,imagesUpdatedAt:null},
     raids:{selected:['toa'],items:{toa:{id:'toa',name:'Tombs of Amascut',mode:'Invocation',current:0,target:150,status:'new',best:'',notes:''},cox:{id:'cox',name:'Chambers of Xeric',mode:'Domínio',current:0,target:100,status:'new',best:'',notes:''},tob:{id:'tob',name:'Theatre of Blood',mode:'Domínio',current:0,target:100,status:'new',best:'',notes:''}}},
     gains:{period:'week',xp:0,ehp:0,bossKc:0,lastSync:null},
@@ -111,7 +111,7 @@ function presetState(preset='blank',username='',displayName=''){
   next.total=33;
   next.profileSetupPending=true;
   next.lastSync=null;
-  next.quests={items:[],lastSync:null,source:''};
+  next.quests=emptyQuestState();
   next.history=[{id:id('event'),type:'milestone',title:'Jornada criada',detail:`Preset ${preset==='iron'?'Ironman':preset==='pvm'?'PvM':preset==='main'?'Main':'personalizado'} iniciado.`,date:new Date().toISOString()}];
   next.skills=skillSeed.map(([name,,target])=>({name,current:name==='Hitpoints'?10:1,target:preset==='pvm'?target:Math.min(target,70),xp:0}));
   if(preset==='iron'){
@@ -292,9 +292,10 @@ function raidDrawer(raidId){const item=state.raids.items[raidId];return `${drawe
 
 function pageContent(){return ({dashboard:dashboardPage,profiles:profilesPage,roadmap:roadmapPage,goals:goalsPage,quests:questsPage,session:sessionPage,character:characterPage,pvm:pvmPage,economy:economyPage,planner:plannerPage,history:historyPage,customize:customizePage,settings:settingsPage}[route]||dashboardPage)()}
 function drawerKey(data=ui.drawer){return data?`${data.type}:${data.id||data.questName||data.eraId||'new'}`:''}
+function closeDrawer(){if(ui.drawer)delete ui.drawerDrafts[drawerKey()];ui.skipDrawerDraft=true;ui.drawer=null}
 function captureDrawerDraft(){const drawer=$('.drawer'),form=drawer?.querySelector('form');if(!drawer||!form)return null;const elements=[...form.elements];return {scrollTop:drawer.scrollTop,activeIndex:elements.indexOf(document.activeElement),fields:elements.map(element=>({name:element.name,type:element.type,value:element.type==='file'?'':element.value,checked:element.checked}))}}
 function restoreDrawerDraft(draft){const drawer=$('.drawer'),form=drawer?.querySelector('form');if(!draft||!drawer||!form)return;const elements=[...form.elements];draft.fields.forEach((field,index)=>{const element=elements[index];if(!element||element.name!==field.name||element.type==='file')return;if(['checkbox','radio'].includes(element.type))element.checked=field.checked;else element.value=field.value});drawer.scrollTop=draft.scrollTop;const active=elements[draft.activeIndex];if(active&&typeof active.focus==='function'){active.focus({preventScroll:true});drawer.scrollTop=draft.scrollTop}}
-function capturePageFocus(){const active=document.activeElement;if(!active||active.closest('.drawer'))return null;const attribute=['data-goal-search','data-quest-search','data-boss-search','data-market-search','data-bank-search'].find(name=>active.hasAttribute(name));if(!attribute)return null;return {selector:`[${attribute}]`,start:active.selectionStart,end:active.selectionEnd}}
+function capturePageFocus(){const active=document.activeElement;if(!active||active.closest('.drawer'))return null;const attribute=['data-goal-search','data-quest-search','data-boss-search','data-market-search','data-bank-search','data-progression-search','data-slayer-search','data-gear-search'].find(name=>active.hasAttribute(name));if(!attribute)return null;return {selector:`[${attribute}]`,start:active.selectionStart,end:active.selectionEnd}}
 function restorePageFocus(focus){if(!focus)return;const active=$(focus.selector);if(!active)return;active.focus({preventScroll:true});if(typeof active.setSelectionRange==='function')active.setSelectionRange(focus.start,focus.end)}
 function normalizeButtonTypes(){$$('button:not([type])').forEach(button=>{const form=button.closest('form'),isPlainSubmit=form&&!Object.keys(button.dataset).length;button.type=isPlainSubmit?'submit':'button';if(isPlainSubmit&&form.closest('.drawer'))button.dataset.drawerSave=''})}
 function render(){const nextDrawerKey=drawerKey(),pageFocus=capturePageFocus(),captured=!ui.skipDrawerDraft&&ui.renderedDrawerKey?captureDrawerDraft():null;if(captured)ui.drawerDrafts[ui.renderedDrawerKey]=captured;document.body.classList.toggle('reduce-motion',!state.preferences.motion);document.body.classList.toggle('compact-density',state.preferences.density==='compact');document.body.dataset.route=route;$('#app').innerHTML=appShell(pageContent());normalizeButtonTypes();ui.renderedDrawerKey=nextDrawerKey;restoreDrawerDraft(ui.drawerDrafts[nextDrawerKey]);restorePageFocus(pageFocus);ui.skipDrawerDraft=false;ui.routeEntering=false;applyPreferences();}
@@ -308,12 +309,12 @@ function formatDate(value){const date=new Date(value);if(Number.isNaN(date.getTi
 function moveInArray(array,value,direction){const index=array.indexOf(value),target=index+direction;if(index<0||target<0||target>=array.length)return;[array[index],array[target]]=[array[target],array[index]]}
 
 document.addEventListener('click',async event=>{
-  if(event.target.matches('[data-drawer-backdrop]')){ui.drawer=null;render();return}
+  if(event.target.matches('[data-drawer-backdrop]')){closeDrawer();render();return}
   const button=event.target.closest('button,[data-close-menu]');if(!button)return;
   if(button.dataset.route){navigate(button.dataset.route);return}
   if(button.matches('[data-menu]')){ui.menu=!ui.menu;render();return}
   if(button.matches('[data-close-menu]')){ui.menu=false;render();return}
-  if(button.matches('[data-close-drawer]')){ui.drawer=null;render();return}
+  if(button.matches('[data-close-drawer]')){closeDrawer();render();return}
   if(button.matches('[data-focus]')){document.body.classList.toggle('focus-mode');return}
   if(button.matches('[data-toggle-dashboard-edit]')){ui.customize=!ui.customize;render();return}
   if(button.dataset.profileNew!==undefined){ui.drawer={type:'profile'};render();return}
@@ -410,10 +411,10 @@ document.addEventListener('click',async event=>{
 });
 
 document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&ui.drawer){event.preventDefault();closeDrawer();render();return}
   const form=event.target.closest?.('.drawer-form');
   if(!form)return;
   if(event.key==='Enter'&&!event.target.matches('textarea,button[data-drawer-save]'))event.preventDefault();
-  if(event.key==='Escape'){event.preventDefault();ui.drawer=null;render()}
 });
 
 document.addEventListener('change',event=>{
@@ -443,7 +444,7 @@ document.addEventListener('submit',async event=>{
   event.preventDefault();const form=event.target;
   if(form.closest('.drawer')&&!event.submitter?.matches('[data-drawer-save]'))return;
   const data=new FormData(form);if(form.closest('.drawer')){delete ui.drawerDrafts[drawerKey()];ui.skipDrawerDraft=true}
-  if(form.matches('[data-profile-form]')){const profileId=data.get('id'),name=data.get('name').trim(),username=data.get('username').trim(),accountType=data.get('accountType'),duplicate=profileHub.profiles.find(profile=>profile.id!==profileId&&profile.username.toLowerCase()===username.toLowerCase());if(duplicate){toast('Esse personagem já está cadastrado.');return}if(profileId){const profile=profileHub.profiles.find(item=>item.id===profileId),changedNick=profile.username.toLowerCase()!==username.toLowerCase();profile.name=name;profile.username=username;profile.accountType=accountType;const profileState=profile.id===profileHub.activeId?state:profile.state;profileState.account=name;profileState.username=username;if(changedNick){profileState.lastSync=null;profileState.quests={items:[],lastSync:null,source:''}}profile.state=profileState;persistProfiles();ui.drawer=null;save('Personagem atualizado');render()}else{const preset=data.get('preset')||'blank',profile={id:id('profile'),name,username,accountType,preset,createdAt:new Date().toISOString(),state:presetState(preset,username,name)};activeProfile().state=state;profileHub.profiles.push(profile);profileHub.activeId=profile.id;state=mergeDefaults(profile.state);persistProfiles();ui.drawer=null;navigate('dashboard');toast(`${name} criado`);await syncAccount();await syncQuests(true)}return}
+  if(form.matches('[data-profile-form]')){const profileId=data.get('id'),name=data.get('name').trim(),username=data.get('username').trim(),accountType=data.get('accountType'),duplicate=profileHub.profiles.find(profile=>profile.id!==profileId&&profile.username.toLowerCase()===username.toLowerCase());if(duplicate){toast('Esse personagem já está cadastrado.');return}if(profileId){const profile=profileHub.profiles.find(item=>item.id===profileId),changedNick=profile.username.toLowerCase()!==username.toLowerCase();profile.name=name;profile.username=username;profile.accountType=accountType;const profileState=profile.id===profileHub.activeId?state:profile.state;profileState.account=name;profileState.username=username;if(changedNick){profileState.lastSync=null;profileState.quests=emptyQuestState()}profile.state=profileState;persistProfiles();ui.drawer=null;save('Personagem atualizado');render()}else{const preset=data.get('preset')||'blank',profile={id:id('profile'),name,username,accountType,preset,createdAt:new Date().toISOString(),state:presetState(preset,username,name)};activeProfile().state=state;profileHub.profiles.push(profile);profileHub.activeId=profile.id;state=mergeDefaults(profile.state);persistProfiles();ui.drawer=null;navigate('dashboard');toast(`${name} criado`);await syncAccount();await syncQuests(true)}return}
   if(form.matches('[data-goal-form]')){
     const goalId=data.get('id'),mode=data.get('mode'),questName=data.get('questName')||null,diaryTarget=String(data.get('diaryTarget')||'').split('|');
     if(mode==='quest'&&!questName){toast('Selecione a quest que será acompanhada.');return}
@@ -474,9 +475,29 @@ document.addEventListener('submit',async event=>{
   if(form.matches('[data-drop-form]')){const dropId=data.get('id');let item=state.planner.drops.find(entry=>entry.id===dropId);if(!item){item={id:id('drop'),done:false};state.planner.drops.push(item)}Object.assign(item,{item:data.get('item').trim(),bossId:data.get('bossId')||null,rate:Number(data.get('rate'))||1,startKc:Number(data.get('startKc'))||0,kc:Number(data.get('kc'))||0,notes:data.get('notes').trim()});save(dropId?'Drop goal atualizado':'Drop goal criado');ui.drawer=null;render();return}
   if(form.matches('[data-checkpoint-form]')){const checkpointId=data.get('id');let item=state.planner.checkpoints.find(entry=>entry.id===checkpointId);if(!item){item={id:id('checkpoint')};state.planner.checkpoints.push(item)}Object.assign(item,{name:data.get('name').trim(),category:data.get('category'),current:Number(data.get('current'))||0,target:Number(data.get('target'))||1,goalId:data.get('goalId')||null,notes:data.get('notes').trim()});save(checkpointId?'Checkpoint atualizado':'Checkpoint criado');ui.drawer=null;render();return}
   if(form.matches('[data-preferences]')){state.preferences.accent=data.get('accent');state.preferences.cardOpacity=Number(data.get('cardOpacity'));state.preferences.density=data.get('density');state.preferences.motion=data.get('motion')==='on';state.preferences.startPage=data.get('startPage');save('Aparência atualizada');render();return}
-  if(form.matches('[data-sync-form]')){const username=data.get('username').trim();if(username.toLowerCase()!==state.username.toLowerCase()){state.username=username;state.lastSync=null;state.quests={items:[],lastSync:null,source:''}}save('Nick atualizado',true);await syncAccount();return}
+  if(form.matches('[data-sync-form]')){const username=data.get('username').trim();if(username.toLowerCase()!==state.username.toLowerCase()){state.username=username;state.lastSync=null;state.quests=emptyQuestState()}save('Nick atualizado',true);await syncAccount();return}
   if(form.matches('[data-account-form]')){state.account=data.get('account').trim()||'Minha conta';state.totalGoal=Number(data.get('totalGoal'))||2000;save('Identidade atualizada');render();return}
 });
+
+const qaOriginalQuestsPage=questsPage;
+questsPage=function(){
+  const checked=state.quests.lastChecked?formatDate(state.quests.lastChecked):'',received=state.quests.lastSync?formatDate(state.quests.lastSync):'',connection=state.quests.connection||'',error=state.quests.syncError||'';
+  const health=error
+    ?`<div class="quest-sync-health error"><span>!</span><div><strong>A última verificação falhou</strong><small>${esc(error)}. Seus dados anteriores foram mantidos.</small></div></div>`
+    :connection==='live'
+      ?`<div class="quest-sync-health live"><span>●</span><div><strong>Conectado diretamente ao WikiSync</strong><small>Verificado ${checked||'agora'} · progresso do RuneLite recebido ${received||'agora'}.</small></div></div>`
+      :state.quests.lastChecked
+        ?`<div class="quest-sync-health cached"><span>↻</span><div><strong>Cache automático conferido ${checked}</strong><small>O navegador bloqueou a consulta direta; o GitHub atualiza este cache periodicamente. Progresso do jogo recebido ${received||'—'}.</small></div></div>`
+        :`<div class="quest-sync-health waiting"><span>○</span><div><strong>Aguardando a primeira verificação</strong><small>Abra o RuneLite com o WikiSync ativo e use “Atualizar quests”.</small></div></div>`;
+  return qaOriginalQuestsPage().replace('<div class="quest-summary">',`${health}<div class="quest-summary">`).replace('<span>Último WikiSync</span>','<span>Dados do jogo</span>');
+};
+const qaOriginalSettingsPage=settingsPage;
+settingsPage=function(){
+  let html=qaOriginalSettingsPage().replace('Lê as quests do personagem atual enviadas pelo RuneLite.','Lê Quests, Diaries e Combat Achievements enviados pelo RuneLite. Se a consulta direta for bloqueada, usa o cache automático do GitHub sem apagar seu progresso.');
+  const marker='<h2>WikiSync de quests</h2>',start=html.indexOf(marker),end=start<0?-1:html.indexOf('</section>',start);
+  if(start>=0&&end>start){const block=html.slice(start,end),status=state.quests.lastChecked?`Última verificação: ${formatDate(state.quests.lastChecked)} · dados do jogo: ${state.quests.lastSync?formatDate(state.quests.lastSync):'—'}`:'Abra o RuneLite com o WikiSync ativo para enviar seu diário.';html=html.slice(0,start)+block.replace(/<small>.*?<\/small>/,`<small>${status}</small>`)+html.slice(end)}
+  return html;
+};
 
 function chooseFile(accept,callback){const bridge=$('#fileBridge');bridge.accept=accept;bridge.value='';bridge.onchange=()=>{if(bridge.files[0])callback(bridge.files[0])};bridge.click()}
 function download(content,name){const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([content],{type:'application/json'}));link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(link.href),500)}
@@ -490,34 +511,47 @@ function syncPvmFromSnapshot(snapshot){const metrics=snapshot.bosses||{},changes
 
 async function syncAccount(){const buttons=$$('[data-sync], [data-sync-form] button');buttons.forEach(button=>{button.disabled=true;button.textContent='↻ Atualizando...'});try{await fetch(`https://api.wiseoldman.net/v2/players/${encodeURIComponent(state.username)}`,{method:'POST',headers:{'Content-Type':'application/json'}});const response=await fetch(`https://api.wiseoldman.net/v2/players/${encodeURIComponent(state.username)}`);if(!response.ok)throw new Error('Conta não encontrada');const payload=await response.json(),snapshot=payload.latestSnapshot?.data,womType=({regular:'main',ironman:'ironman',hardcore:'hardcore',ultimate:'ultimate'})[payload.type];if(womType)activeProfile().accountType=womType;if(!snapshot)throw new Error('Sem snapshot disponível');const map={attack:'Attack',strength:'Strength',defence:'Defence',hitpoints:'Hitpoints',ranged:'Ranged',prayer:'Prayer',magic:'Magic',cooking:'Cooking',woodcutting:'Woodcutting',fletching:'Fletching',fishing:'Fishing',firemaking:'Firemaking',crafting:'Crafting',smithing:'Smithing',mining:'Mining',herblore:'Herblore',agility:'Agility',thieving:'Thieving',slayer:'Slayer',farming:'Farming',runecrafting:'Runecraft',hunter:'Hunter',construction:'Construction',sailing:'Sailing'};const gained=[];Object.entries(map).forEach(([key,name])=>{const item=skill(name),level=snapshot.skills?.[key]?.level;if(item&&Number.isFinite(level)&&level>0){if(level>item.current)gained.push(`${name} ${item.current}→${level}`);item.current=level;item.xp=snapshot.skills[key].experience||item.xp}});if(state.profileSetupPending){state.skills.forEach(item=>{if(item.target<=item.current)item.target=item.current>=99?99:Math.min(99,Math.ceil((item.current+3)/5)*5)});state.profileSetupPending=false}if(snapshot.skills?.overall?.level)state.total=snapshot.skills.overall.level;const kcChanges=syncPvmFromSnapshot(snapshot);state.lastSync=new Date().toISOString();await syncGains();const details=[...gained,...kcChanges];addHistory('sync','Conta sincronizada',details.length?details.join(', '):'Níveis, KCs e ganhos semanais conferidos.');save(kcChanges.length?`${kcChanges.length} KC(s) atualizada(s)`:'Conta atualizada');render()}catch(error){toast(`Não foi possível atualizar: ${error.message}`);buttons.forEach(button=>button.disabled=false)}}
 
+const QUEST_SYNC_BASE='https://sync.runescape.wiki/runelite/player';
+const QUEST_SNAPSHOT_BASE='https://raw.githubusercontent.com/marcosjoaosch/osrs-main-journey/main';
+function emptyQuestState(){return {items:[],lastSync:null,lastChecked:null,source:'',connection:'',syncError:''}}
+function questSnapshotFile(username=state.username){return slug(username)==='samurai-jao'?'quest-data.json':`quest-data-${slug(username)}.json`}
+function validateQuestPayload(payload){
+  if(!payload||slug(payload.username)!==slug(state.username))throw new Error('os dados encontrados pertencem a outro personagem');
+  const entries=Object.entries(payload.quests||{}).filter(([name])=>name!=='.');
+  if(!entries.length)throw new Error('nenhuma quest foi encontrada para este personagem');
+  return entries;
+}
+async function fetchQuestPayload(url,label,connection){
+  const response=await fetch(url,{cache:'no-store',headers:{Accept:'application/json'},signal:AbortSignal.timeout(9000)});
+  if(!response.ok)throw new Error(`${label}: resposta ${response.status}`);
+  const payload=await response.json();validateQuestPayload(payload);return {payload,label,connection};
+}
 async function syncQuests(silent=false){
   if(ui.questSyncing)return;
-  ui.questSyncing=true;
-  if(route==='quests')render();
+  ui.questSyncing=true;state.quests.syncError='';
+  if(route==='quests'||route==='settings'||route==='achievements')render();
+  const snapshot=questSnapshotFile(),sources=[
+    [`${QUEST_SYNC_BASE}/${encodeURIComponent(state.username)}/STANDARD`,'WikiSync ao vivo','live'],
+    [`${snapshot}?v=${Date.now()}`,'Snapshot automático do GitHub','snapshot'],
+    [`${QUEST_SNAPSHOT_BASE}/${snapshot}?v=${Date.now()}`,'Snapshot remoto do GitHub','snapshot']
+  ];
   try{
-    let response,source='WikiSync ao vivo';
-    try{response=await fetch(`https://sync.runescape.wiki/runelite/player/${encodeURIComponent(state.username)}/STANDARD`);if(!response.ok)throw new Error()}catch{const snapshot=slug(state.username)==='samurai-jao'?'quest-data.json':`quest-data-${slug(state.username)}.json`;response=await fetch(`${snapshot}?v=${Date.now()}`);source='Snapshot automático do GitHub'}
-    if(!response.ok)throw new Error('perfil ainda não disponível no WikiSync');
-    const payload=await response.json();
-    if(source!=='WikiSync ao vivo'&&String(payload.username).toLowerCase()!==String(state.username).toLowerCase())throw new Error('o snapshot pertence a outro personagem');
-    const entries=Object.entries(payload.quests||{}).filter(([name])=>name!=='.');
-    if(!entries.length)throw new Error('nenhuma quest encontrada');
+    let result=null,lastError=null;
+    for(const [url,label,connection] of sources){try{result=await fetchQuestPayload(url,label,connection);break}catch(error){lastError=error}}
+    if(!result)throw lastError||new Error('nenhuma fonte respondeu');
+    const {payload,label,connection}=result,entries=validateQuestPayload(payload),now=new Date().toISOString();
     state.quests.items=entries.map(([name,value])=>({name,state:Number(value)}));
-    state.quests.lastSync=payload.timestamp||new Date().toISOString();
-    state.quests.source=source;
-    state.progression.diaries.data=payload.achievement_diaries||{};
-    state.progression.diaries.lastSync=payload.timestamp||new Date().toISOString();
-    state.progression.diaries.source=source;
-    state.progression.combatAchievements.completed=(payload.combat_achievements||[]).map(Number).filter(Number.isFinite);
-    state.progression.combatAchievements.lastSync=payload.timestamp||new Date().toISOString();
-    state.progression.combatAchievements.source=source;
+    state.quests.lastSync=payload.timestamp||now;state.quests.lastChecked=now;state.quests.source=label;state.quests.connection=connection;state.quests.syncError='';
+    state.progression.diaries.data=payload.achievement_diaries||{};state.progression.diaries.lastSync=payload.timestamp||now;state.progression.diaries.source=label;
+    state.progression.combatAchievements.completed=(payload.combat_achievements||[]).map(Number).filter(Number.isFinite);state.progression.combatAchievements.lastSync=payload.timestamp||now;state.progression.combatAchievements.source=label;
+    if(Array.isArray(payload.collection_log)&&(payload.collection_log.length||Number(payload.collectionLogItemCount)>0)){state.progression.collectionLog.completed=payload.collection_log.map(Number).filter(Number.isFinite);state.progression.collectionLog.itemCount=Number(payload.collectionLogItemCount)||state.progression.collectionLog.completed.length;state.progression.collectionLog.lastSync=payload.timestamp||now;state.progression.collectionLog.source=label}
     const completed=[];
-    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
-    const syncMessage=source==='WikiSync ao vivo'
-      ?`Quests, Diaries e Combat Achievements atualizados${completed.length?` · ${completed.length} meta(s) concluída(s)`:''}`
-      :`Quests, Diaries e Combat Achievements carregados do snapshot`;
+    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
+    const syncMessage=connection==='live'
+      ?`WikiSync atualizado ao vivo${completed.length?` · ${completed.length} meta(s) concluída(s)`:''}`
+      :`Cache de quests conferido agora · progresso recebido ${formatDate(state.quests.lastSync)}`;
     save(syncMessage,silent);
-  }catch(error){if(!silent)toast(`Não foi possível atualizar as quests: ${error.message}`)}finally{ui.questSyncing=false;render()}
+  }catch(error){state.quests.lastChecked=new Date().toISOString();state.quests.syncError=error.message||'falha desconhecida';if(!silent)toast(`Não foi possível atualizar as quests: ${state.quests.syncError}`)}finally{ui.questSyncing=false;render()}
 }
 
 async function loadWikiCatalog(){if(state.bosses.wikiLoaded)return;try{const response=await fetch('https://oldschool.runescape.wiki/api.php?action=query&format=json&origin=*&list=categorymembers&cmtitle=Category%3ABosses&cmlimit=max&cmtype=page');const payload=await response.json(),known=new Set(state.bosses.catalog.map(item=>item.wiki));(payload.query?.categorymembers||[]).forEach(entry=>{if(!known.has(entry.title)){state.bosses.catalog.push({id:`wiki-${entry.pageid}`,name:entry.title,category:'Catálogo Wiki',wiki:entry.title});known.add(entry.title)}});state.bosses.wikiLoaded=true;save('Catálogo atualizado',true)}catch{}}

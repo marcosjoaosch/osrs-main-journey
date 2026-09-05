@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '17 * * * *'
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/sync-quests.yml'
 
 permissions:
   contents: write
@@ -17,13 +20,15 @@ jobs:
 
       - name: Consultar o WikiSync
         run: |
-          curl --fail --silent --show-error --location "https://sync.runescape.wiki/runelite/player/samurai_jao/STANDARD" --output /tmp/quest-data.json
-          curl --fail --silent --show-error --location "https://sync.runescape.wiki/runelite/player/Iron%20Samuka/STANDARD" --output /tmp/quest-data-iron-samuka.json
+          USER_AGENT='OSRS-Main-Journey/1.0 (https://github.com/marcosjoaosch/osrs-main-journey)'
+          curl --fail --silent --show-error --location --retry 3 --retry-all-errors --connect-timeout 15 --max-time 60 --user-agent "$USER_AGENT" "https://sync.runescape.wiki/runelite/player/samurai_jao/STANDARD" --output /tmp/quest-data.json
+          curl --fail --silent --show-error --location --retry 3 --retry-all-errors --connect-timeout 15 --max-time 60 --user-agent "$USER_AGENT" "https://sync.runescape.wiki/runelite/player/Iron%20Samuka/STANDARD" --output /tmp/quest-data-iron-samuka.json
 
       - name: Atualizar quando qualquer progresso do WikiSync mudar
         run: |
           python - <<'PY'
           import json
+          from datetime import datetime, timezone
           from pathlib import Path
 
           pairs = [
@@ -37,7 +42,13 @@ jobs:
                   'quests', 'achievement_diaries', 'combat_achievements',
                   'collection_log', 'collectionLogItemCount', 'levels'
               )
-              if any(fresh.get(key) != current.get(key) for key in tracked):
+              checked = current.get('_github_checked_at')
+              try:
+                  checked_age = (datetime.now(timezone.utc) - datetime.fromisoformat(checked.replace('Z', '+00:00'))).total_seconds()
+              except (AttributeError, TypeError, ValueError):
+                  checked_age = 999999
+              if any(fresh.get(key) != current.get(key) for key in tracked) or checked_age >= 14400:
+                  fresh['_github_checked_at'] = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
                   target.write_text(json.dumps(fresh, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 

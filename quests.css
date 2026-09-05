@@ -5,6 +5,31 @@
   margin: 16px 0;
 }
 
+.quest-sync-health {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 14px 0 4px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid #88734a;
+  border-radius: 9px;
+  background: rgba(13, 17, 15, .88);
+}
+
+.quest-sync-health > span {
+  color: var(--accent);
+  font-size: 16px;
+}
+
+.quest-sync-health div { display: grid; gap: 2px; }
+.quest-sync-health strong { color: var(--text); font-size: 12px; }
+.quest-sync-health small { color: var(--muted); font-size: 10px; line-height: 1.45; }
+.quest-sync-health.live { border-left-color: var(--green); }
+.quest-sync-health.live > span { color: var(--green); }
+.quest-sync-health.error { border-left-color: #d96a5e; }
+.quest-sync-health.error > span { color: #ef7d70; }
+
 .quest-summary > div {
   padding: 14px 16px;
   border: 1px solid var(--line);

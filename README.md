@@ -15,7 +15,7 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 - planejamento de upgrades, skills, rotinas, drops, diaries e Combat Achievements;
 - Achievement Diaries completas, com tarefas, requisitos, filtros e progresso do WikiSync;
 - Combat Achievements com catálogo da Wiki, pontos, recompensas e metas automáticas;
-- Collection Log por item e por página, importado do `collection_log.json` gerado pelo plugin Character Export do RuneLite;
+- Collection Log por item e por página, sincronizado pelo WikiSync, com importação do `collection_log.json` do Character Export como alternativa;
 - Banco por personagem, importado do `bank.json` do Character Export, com caixa em moedas e valor negociável estimado pela OSRS Wiki;
 - assistente de faxina do banco com reservas editáveis, itens protegidos, sugestões de GE/High Alchemy e valor transferível para uma main;
 - Gear Lab com defesas, formas, fraquezas e equipamentos recomendados do budget ao max gear vindos da OSRS Wiki, usados no cálculo de precisão e DPS;
@@ -27,4 +27,4 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 
 O projeto é uma aplicação estática e mantém os dados personalizados no armazenamento local do navegador. Atualizações de estrutura usam migração incremental e mantêm backups locais de segurança dos dados anteriores.
 
-Os níveis e KCs vêm do Wise Old Man. Quests, Diaries e Combat Achievements usam o WikiSync. O Collection Log é importado pelo botão próprio da aba a partir do `collection_log.json` do plugin Character Export do RuneLite; essa separação evita que um snapshot vazio apague itens já registrados. Catálogos e requisitos usam a OSRS Wiki, preços usam a API de preços da Wiki e equipamentos usam dados públicos derivados do cache do jogo, RuneLite e Wiki.
+Os níveis e KCs vêm do Wise Old Man. Quests, Diaries, Combat Achievements e Collection Log usam o WikiSync. Quando o navegador bloqueia a consulta direta, a aplicação usa snapshots atualizados automaticamente pelo GitHub e informa separadamente a data da verificação e a data dos dados recebidos. Um snapshot sem Collection Log não apaga itens já registrados; o `collection_log.json` do Character Export continua disponível como alternativa manual. Catálogos e requisitos usam a OSRS Wiki, preços usam a API de preços da Wiki e equipamentos usam dados públicos derivados do cache do jogo, RuneLite e Wiki.
