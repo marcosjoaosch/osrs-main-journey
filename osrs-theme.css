@@ -874,3 +874,11 @@ h3 {
   max-height: 134px;
   object-fit: contain;
 }
+
+.mini-skills.smart > button.active-priority {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+}
+
+.mini-skills.smart > button.planned-priority {
+  border-color: rgba(112, 174, 203, 0.3);
+}
