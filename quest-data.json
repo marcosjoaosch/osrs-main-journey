@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-07T16:27:48.585Z",
+  "timestamp": "2026-09-07T20:34:44.868Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -945,7 +945,7 @@
         "tasks": [
           false,
           false,
-          false,
+          true,
           false,
           false,
           false,
@@ -974,9 +974,9 @@
     }
   },
   "levels": {
-    "Hunter": 67,
+    "Hunter": 69,
     "Thieving": 72,
-    "Runecraft": 59,
+    "Runecraft": 60,
     "Construction": 83,
     "Cooking": 72,
     "Magic": 86,
@@ -2019,5 +2019,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-07T16:27:48.869481Z"
+  "_github_checked_at": "2026-09-07T20:34:45.021613Z"
 }
