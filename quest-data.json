@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-08T14:02:48.485Z",
+  "timestamp": "2026-09-08T14:07:08.614Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -249,7 +249,7 @@
         "complete": false,
         "tasks": [
           false,
-          false,
+          true,
           false,
           true,
           false,
@@ -984,7 +984,7 @@
     "Herblore": 70,
     "Firemaking": 75,
     "Attack": 90,
-    "Fishing": 62,
+    "Fishing": 63,
     "Crafting": 70,
     "Hitpoints": 91,
     "Ranged": 82,
@@ -1411,7 +1411,7 @@
     "Last King of the Yarasa": false,
     "Last Man Standing": false,
     "The Last Shanty": true,
-    "Last Stand": false,
+    "Last Stand": true,
     "Lasting": true,
     "Lava is Mine": false,
     "Legend": true,
@@ -1450,7 +1450,7 @@
     "The Maiden's Anger": false,
     "The Maiden's Sorrow": false,
     "Major Miner": false,
-    "Making Waves": false,
+    "Making Waves": true,
     "Malady": true,
     "March": true,
     "March of the Shayzien": false,
@@ -2019,5 +2019,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-08T14:04:00Z"
+  "_github_checked_at": "2026-09-08T14:07:08.795284Z"
 }
