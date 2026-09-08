@@ -2,7 +2,7 @@ name: Atualizar quests do WikiSync
 
 on:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
   push:
     paths:

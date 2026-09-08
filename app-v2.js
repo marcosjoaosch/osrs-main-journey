@@ -515,12 +515,12 @@ document.addEventListener('submit',async event=>{
 const qaOriginalQuestsPage=questsPage;
 questsPage=function(){
   const checked=state.quests.lastChecked?formatDate(state.quests.lastChecked):'',received=state.quests.lastSync?formatDate(state.quests.lastSync):'',connection=state.quests.connection||'',error=state.quests.syncError||'';
-  const health=error
+  const liveConnection=connection.startsWith('live'),health=error
     ?`<div class="quest-sync-health error"><span>!</span><div><strong>A última verificação falhou</strong><small>${esc(error)}. Seus dados anteriores foram mantidos.</small></div></div>`
-    :connection==='live'
+    :liveConnection
       ?`<div class="quest-sync-health live"><span>●</span><div><strong>Conectado diretamente ao WikiSync</strong><small>Verificado ${checked||'agora'} · progresso do RuneLite recebido ${received||'agora'}.</small></div></div>`
       :state.quests.lastChecked
-        ?`<div class="quest-sync-health cached"><span>↻</span><div><strong>Cache automático conferido ${checked}</strong><small>O navegador bloqueou a consulta direta; o GitHub atualiza este cache periodicamente. Progresso do jogo recebido ${received||'—'}.</small></div></div>`
+        ?`<div class="quest-sync-health cached"><span>↻</span><div><strong>Sem atualização ao vivo</strong><small>Foi mantido o cache de ${received||'—'}. ${state.quests.sourceFailures?.length?`Falha: ${esc(state.quests.sourceFailures.join(' · '))}. `:''}O backup do GitHub também é atualizado periodicamente.</small></div></div>`
         :`<div class="quest-sync-health waiting"><span>○</span><div><strong>Aguardando a primeira verificação</strong><small>Abra o RuneLite com o WikiSync ativo e use “Atualizar quests”.</small></div></div>`;
   return qaOriginalQuestsPage().replace('<div class="quest-summary">',`${health}<div class="quest-summary">`).replace('<span>Último WikiSync</span>','<span>Dados do jogo</span>');
 };
@@ -557,7 +557,14 @@ function validateQuestPayload(payload){
 async function fetchQuestPayload(url,label,connection){
   const response=await fetch(url,{cache:'no-store',headers:{Accept:'application/json'},signal:AbortSignal.timeout(9000)});
   if(!response.ok)throw new Error(`${label}: resposta ${response.status}`);
-  const payload=await response.json();validateQuestPayload(payload);return {payload,label,connection};
+  const body=await response.text();
+  let payload;
+  try{payload=JSON.parse(body)}catch{
+    const marker='Markdown Content:',start=body.indexOf(marker),jsonStart=body.indexOf('{',start>=0?start+marker.length:0),jsonEnd=body.lastIndexOf('}');
+    if(jsonStart<0||jsonEnd<jsonStart)throw new Error(`${label}: resposta inválida`);
+    try{payload=JSON.parse(body.slice(jsonStart,jsonEnd+1))}catch{throw new Error(`${label}: JSON inválido`)}
+  }
+  validateQuestPayload(payload);return {payload,label,connection};
 }
 async function syncQuests(silent=false){
   if(ui.questSyncing)return;
@@ -569,20 +576,24 @@ async function syncQuests(silent=false){
     [`${snapshot}?v=${Date.now()}`,'Snapshot local de emergência','snapshot']
   ];
   try{
-    let result=null,lastError=null;
-    for(const [url,label,connection] of sources){try{result=await fetchQuestPayload(url,label,connection);break}catch(error){lastError=error}}
+    let result=null,lastError=null;const sourceFailures=[];
+    for(const [url,label,connection] of sources){try{result=await fetchQuestPayload(url,label,connection);break}catch(error){lastError=error;sourceFailures.push(`${label}: ${error.message}`)}}
     if(!result)throw lastError||new Error('nenhuma fonte respondeu');
-    const {payload,label,connection}=result,entries=validateQuestPayload(payload),now=new Date().toISOString();
+    const {payload,label,connection}=result,entries=validateQuestPayload(payload),now=new Date().toISOString(),previous=new Map((state.quests.items||[]).map(item=>[slug(item.name),Number(item.state)]));
+    const changed=entries.filter(([name,value])=>previous.has(slug(name))&&previous.get(slug(name))!==Number(value));
     state.quests.items=entries.map(([name,value])=>({name,state:Number(value)}));
-    state.quests.lastSync=payload.timestamp||now;state.quests.lastChecked=now;state.quests.source=label;state.quests.connection=connection;state.quests.syncError='';
+    state.quests.lastSync=payload.timestamp||now;state.quests.lastChecked=now;state.quests.source=label;state.quests.connection=connection;state.quests.syncError='';state.quests.sourceFailures=connection.startsWith('live')?[]:sourceFailures.slice(0,2);
     state.progression.diaries.data=payload.achievement_diaries||{};state.progression.diaries.lastSync=payload.timestamp||now;state.progression.diaries.source=label;
     state.progression.combatAchievements.completed=(payload.combat_achievements||[]).map(Number).filter(Number.isFinite);state.progression.combatAchievements.lastSync=payload.timestamp||now;state.progression.combatAchievements.source=label;
     if(Array.isArray(payload.collection_log)&&(payload.collection_log.length||Number(payload.collectionLogItemCount)>0)){state.progression.collectionLog.completed=payload.collection_log.map(Number).filter(Number.isFinite);state.progression.collectionLog.itemCount=Number(payload.collectionLogItemCount)||state.progression.collectionLog.completed.length;state.progression.collectionLog.lastSync=payload.timestamp||now;state.progression.collectionLog.source=label}
     const completed=[];
     state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
-    const syncMessage=connection==='live'
-      ?`WikiSync atualizado ao vivo${completed.length?` · ${completed.length} meta(s) concluída(s)`:''}`
-      :`Cache de quests conferido agora · progresso recebido ${formatDate(state.quests.lastSync)}`;
+    const live=connection.startsWith('live');
+    const syncMessage=live
+      ?changed.length
+        ?`Quests atualizadas ao vivo · ${changed.length} mudança(s)${completed.length?` · ${completed.length} meta(s) concluída(s)`:''}`
+        :'WikiSync consultado ao vivo · nenhuma mudança desde a última leitura'
+      :`Sem acesso ao vivo · exibindo cache de ${formatDate(state.quests.lastSync)}`;
     save(syncMessage,silent);
   }catch(error){state.quests.lastChecked=new Date().toISOString();state.quests.syncError=error.message||'falha desconhecida';if(!silent)toast(`Não foi possível atualizar as quests: ${state.quests.syncError}`)}finally{ui.questSyncing=false;render()}
 }

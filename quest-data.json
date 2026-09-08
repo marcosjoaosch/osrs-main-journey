@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-08T09:41:38.478Z",
+  "timestamp": "2026-09-08T14:02:48.485Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -101,7 +101,7 @@
     "Sleeping Giants": 2,
     "Song of the Elves": 0,
     "Spirits of the Elid": 2,
-    "Swan Song": 0,
+    "Swan Song": 2,
     "Tale of the Righteous": 2,
     "Tears of Guthix": 2,
     "Temple of the Eye": 2,
@@ -2019,5 +2019,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-08T09:41:38.638404Z"
+  "_github_checked_at": "2026-09-08T14:04:00Z"
 }
