@@ -1,0 +1,77 @@
+/* Quality-of-life layer. Kept separate so existing character data and modules remain untouched. */
+body.drawer-open { overflow: hidden; }
+body.drawer-open .app-shell { pointer-events: none; user-select: none; }
+.drawer { overscroll-behavior: contain; }
+.drawer-form { padding-bottom: 92px; }
+.drawer-form > .drawer-submit,
+.drawer-form > button.primary-btn:last-child {
+  position: sticky;
+  bottom: 0;
+  z-index: 8;
+  min-height: 48px;
+  box-shadow: 0 -14px 24px rgba(13, 10, 7, .92);
+}
+.conditional-fields { display: grid; gap: 14px; }
+.catalog-picker { position: relative; display: grid; gap: 7px; }
+.catalog-picker-results {
+  display: none;
+  max-height: 260px;
+  overflow: auto;
+  border: 1px solid rgba(230, 177, 71, .45);
+  background: #17140f;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .55);
+  position: absolute;
+  z-index: 30;
+  top: calc(100% - 2px);
+  left: 0;
+  right: 0;
+}
+.catalog-picker:focus-within .catalog-picker-results { display: grid; }
+.catalog-picker-results button {
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  border-radius: 0;
+  min-height: 42px;
+  padding: 9px 12px;
+  text-align: left;
+  background: #17140f;
+  color: var(--text, #eee1c5);
+}
+.catalog-picker-results button:hover,
+.catalog-picker-results button:focus { background: rgba(230,177,71,.16); color: #ffd978; }
+.catalog-selected { color: #f0bd4d; font-size: .8rem; min-height: 1em; }
+.catalog-empty { padding: 12px; color: var(--muted, #b7a88c); }
+.achievement-load-more { display: flex; justify-content: center; padding: 18px 0 2px; }
+.achievement-load-more button { min-width: 220px; min-height: 44px; }
+.filter-clear { min-height: 42px; white-space: nowrap; }
+.sync-health-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 10px; }
+.sync-health-item { border: 1px solid rgba(255,255,255,.13); padding: 14px; display: grid; gap: 5px; background: rgba(10,12,10,.54); }
+.sync-health-item > span { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.sync-health-item i { width: 9px; height: 9px; border-radius: 50%; background: #8e8067; }
+.sync-health-item.ok i { background: #68bf75; box-shadow: 0 0 10px rgba(104,191,117,.6); }
+.sync-health-item.error i { background: #d76456; }
+.sync-health-item small { color: var(--muted, #b7a88c); }
+.integration-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.merged-tool-note { border-left: 3px solid var(--accent); padding: 12px 14px; margin-bottom: 14px; background: rgba(230,177,71,.08); }
+.legacy-checkpoints { margin-top: 18px; }
+.legacy-checkpoints summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.skill-flash { animation: skillFlash 1.8s ease; outline: 2px solid #f4c45b !important; }
+@keyframes skillFlash { 0%,100%{box-shadow:none} 35%{box-shadow:0 0 0 7px rgba(244,196,91,.22),0 0 28px rgba(244,196,91,.42)} }
+.session-smart-actions { display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 14px; }
+.economy-margin-tool { margin: 0 0 16px; }
+.economy-margin-tool summary { cursor:pointer; min-height:44px; display:flex; align-items:center; font-weight:700; }
+.economy-margin-tool .calculator-card { margin-top:12px; }
+.pvm-ca-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; }
+.pvm-ca-summary article { padding:14px; border:1px solid rgba(255,255,255,.12); background:rgba(8,10,8,.55); }
+.pvm-ca-summary strong { display:block; font-size:1.35rem; color:#f0bd4d; }
+
+@media (max-width: 700px) {
+  button, a.ghost-btn, .nav-item, .icon-btn, input[type="checkbox"] { min-height: 44px; }
+  .more-btn, .timeline article > button, .gear-slot { min-width: 44px; min-height: 44px; }
+  .drawer { width: min(100%, 560px); }
+  .drawer-form { padding-bottom: 108px; }
+  .achievement-filters { grid-template-columns: 1fr !important; }
+  .catalog-picker-results { max-height: 220px; }
+  .skill-row > button { min-width: 44px !important; width: 44px !important; }
+  .skill-row input[type="number"] { min-height: 44px; height: 44px; }
+}

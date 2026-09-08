@@ -19,11 +19,12 @@ Painel pessoal para acompanhar a progressão de uma conta do Old School RuneScap
 - Banco por personagem, importado do `bank.json` do Character Export, com caixa em moedas e valor negociável estimado pela OSRS Wiki;
 - assistente de faxina do banco com reservas editáveis, itens protegidos, sugestões de GE/High Alchemy e valor transferível para uma main;
 - Gear Lab com defesas, formas, fraquezas e equipamentos recomendados do budget ao max gear vindos da OSRS Wiki, usados no cálculo de precisão e DPS;
-- calculadoras de XP, Banked XP, combat level, margem do GE, drop chance, Prayer e suprimentos;
-- Gear Lab com boneco de equipamentos, busca por slot, ícones, atributos, DPS básico, presets e comparação;
+- guias de boss personalizados com estratégias, checklist, requisitos, histórico de tentativas e integração com Gear Lab, metas e sessão;
+- calculadoras de XP, Banked XP, combat level, margem do GE, drop chance, Prayer e suprimentos; a margem do GE fica junto do Mercado;
 - Central de Slayer com task manual, bestiário de fraquezas e locais, métodos pessoais, block list e guia interativo de Turael Boosting;
 - recomendador de atividades por tempo, intensidade e objetivo;
-- temas e trilha sonora inspirados em Gielinor.
+- central de saúde das integrações, filtros pesquisáveis e paginação dos catálogos maiores;
+- temas e trilha sonora inspirados em Gielinor, incluindo Elder Wisdom.
 
 O projeto é uma aplicação estática e mantém os dados personalizados no armazenamento local do navegador. Atualizações de estrutura usam migração incremental e mantêm backups locais de segurança dos dados anteriores.
 

@@ -4,6 +4,7 @@ const SAFETY_BACKUP_KEY = 'osrs-main-journey-before-economy-v1';
 const EXPANSION_BACKUP_KEY = 'osrs-main-journey-before-progression-suite-v1';
 const OLD_KEY = 'osrs-main-journey-v2';
 const TODO_KEY = 'osrs-main-journey-todos-v1';
+const ROUTE_ALIASES = {home:'dashboard',characters:'profiles',today:'session',skills:'character',personalize:'customize'};
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
@@ -31,6 +32,7 @@ const osrsTracks = [
   {name:'Harmony',area:'Lumbridge',url:'https://oldschool.runescape.wiki/images/Harmony.ogg?e5abf'},
   {name:'Medieval',area:'Varrock',url:'https://oldschool.runescape.wiki/images/Medieval.ogg?1c180'},
   {name:'The Forlorn Homestead',area:'Hosidius',url:'https://oldschool.runescape.wiki/images/The_Forlorn_Homestead.ogg?05489'},
+  {name:'Elder Wisdom',area:'Great Conch',url:'https://oldschool.runescape.wiki/images/Elder_Wisdom.ogg'},
   {name:'Life at Sea',area:'Shipyard',url:'https://oldschool.runescape.wiki/images/Life_at_Sea.ogg?1fc3a'},
   {name:'All Aboard',area:'Viagem marítima',url:'https://oldschool.runescape.wiki/images/All_Aboard.ogg?dbe80'},
   {name:'Set Sail',area:'Viagem marítima',url:'https://oldschool.runescape.wiki/images/Set_Sail.ogg?6da54'},
@@ -165,8 +167,9 @@ const migratedState=migrate();
 let profileHub=loadProfileHub(migratedState);
 function activeProfile(){return profileHub.profiles.find(profile=>profile.id===profileHub.activeId)||profileHub.profiles[0]}
 let state=mergeDefaults(activeProfile().state);
-let route = location.hash.slice(1) || state.preferences.startPage || 'dashboard';
-if(route==='skills')route='character';
+const initialRoute=location.hash.slice(1),aliasedInitialRoute=ROUTE_ALIASES[initialRoute]||initialRoute;
+let route = aliasedInitialRoute || state.preferences.startPage || 'dashboard';
+if(initialRoute&&initialRoute!==aliasedInitialRoute)history.replaceState(null,'',`${location.pathname}${location.search}#${aliasedInitialRoute}`);
 if(!['dashboard','profiles','roadmap','goals','quests','session','character','pvm','economy','planner','history','customize','settings'].includes(route))route='dashboard';
 let ui = {drawer:null,menu:false,goalFilter:'all',goalSearch:'',questFilter:'missing',questSearch:'',questSyncing:false,historyFilter:'all',bossSearch:'',bossCategory:'all',bossManager:false,raidManager:false,bossImagesLoading:false,economyTab:'market',marketSearch:'',plannerTab:'skills',recommendTime:45,recommendIntensity:'any',recommendObjective:'progress',customize:false,routeEntering:true,musicIndex:Number(state.preferences.musicTrack)||0,musicPlaying:false,drawerDrafts:{},skipDrawerDraft:false};
 let undoState = null;
@@ -562,8 +565,8 @@ async function syncQuests(silent=false){
   if(route==='quests'||route==='settings'||route==='achievements')render();
   const snapshot=questSnapshotFile(),sources=[
     [`${QUEST_SYNC_BASE}/${encodeURIComponent(state.username)}/STANDARD`,'WikiSync ao vivo','live'],
-    [`${snapshot}?v=${Date.now()}`,'Snapshot automático do GitHub','snapshot'],
-    [`${QUEST_SNAPSHOT_BASE}/${snapshot}?v=${Date.now()}`,'Snapshot remoto do GitHub','snapshot']
+    [`${QUEST_SNAPSHOT_BASE}/${snapshot}?v=${Date.now()}`,'Snapshot remoto do GitHub','snapshot'],
+    [`${snapshot}?v=${Date.now()}`,'Snapshot local de emergência','snapshot']
   ];
   try{
     let result=null,lastError=null;
@@ -615,7 +618,7 @@ async function loadBossImages(force=false){
   finally{ui.bossImagesLoading=false;if(route==='pvm'&&!ui.drawer)render()}
   return updated;
 }
-window.addEventListener('hashchange',()=>{const next=location.hash.slice(1);if(next===route)return;if(titles[next]){route=next;ui.drawer=null;ui.menu=false;ui.routeEntering=true;window.scrollTo(0,0);render()}});
+window.addEventListener('hashchange',()=>{const requested=location.hash.slice(1),next=ROUTE_ALIASES[requested]||requested;if(requested!==next)history.replaceState(null,'',`${location.pathname}${location.search}#${next}`);if(next===route)return;if(titles[next]){route=next;ui.drawer=null;ui.menu=false;ui.routeEntering=true;window.scrollTo(0,0);render()}});
 const osrsPlayer=musicAudio();
 osrsPlayer.addEventListener('play',()=>{ui.musicPlaying=true;updateMusicUI()});
 osrsPlayer.addEventListener('pause',()=>{ui.musicPlaying=false;updateMusicUI()});
