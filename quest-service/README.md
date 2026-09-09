@@ -6,6 +6,10 @@ Only WikiSync STANDARD is queried. Public player data is returned, never stored 
 
 Run verification with `node --test quest-service/worker.test.mjs quest-service/client.test.mjs`.
 
+For a local HTTP check, run `node quest-service/local-server.mjs` (loopback port
+4174) and consult `/quests?username=samurai_jao` or `/quests?username=Iron%20Samuka`.
+This runs the same handler as the hosted Worker; it does not expose a public service.
+
 Activation checklist:
 
 1. Register a dedicated public Worker/service on the approved hosting account.

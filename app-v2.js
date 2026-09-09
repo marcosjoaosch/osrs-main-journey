@@ -548,6 +548,7 @@ async function syncAccount(){const buttons=$$('[data-sync], [data-sync-form] but
 
 const QUEST_SYNC_BASE='https://sync.runescape.wiki/runelite/player';
 const QUEST_SNAPSHOT_BASE='https://raw.githubusercontent.com/marcosjoaosch/osrs-main-journey/main';
+let questSyncOperation=null;
 function emptyQuestState(){return {items:[],lastSync:null,lastChecked:null,source:'',connection:'',syncError:''}}
 function questSnapshotFile(username=state.username){return slug(username)==='samurai-jao'?'quest-data.json':`quest-data-${slug(username)}.json`}
 function validateQuestPayload(payload,username=state.username){
@@ -566,8 +567,9 @@ async function fetchQuestPayload(url,label,connection,username=state.username){
   return {payload,label,connection:connection==='service'?(body.cached?'service-cache':'live-service'):connection,fetchedAt:body.fetchedAt||null};
 }
 async function syncQuests(silent=false){
-  if(ui.questSyncing)return;
   const startedState=state,startedProfile=profileHub.activeId,username=state.username;
+  if(questSyncOperation?.state===startedState&&questSyncOperation?.username===username)return;
+  const operation={state:startedState,username};questSyncOperation=operation;
   const stillCurrent=()=>state===startedState&&profileHub.activeId===startedProfile&&state.username===username;
   ui.questSyncing=true;state.quests.syncError='';
   if(route==='quests'||route==='settings'||route==='achievements')render();
@@ -584,7 +586,7 @@ async function syncQuests(silent=false){
       try{
         const candidate=await fetchQuestPayload(url,label,connection,username);
         const incomingTime=Date.parse(candidate.payload.timestamp),savedTime=Date.parse(startedState.quests.lastSync);
-        if(connection==='snapshot'&&Number.isFinite(savedTime)&&(!Number.isFinite(incomingTime)||incomingTime<savedTime))throw new Error('cópia mais antiga que seu progresso salvo');
+        if(Number.isFinite(savedTime)&&((connection==='snapshot'&&!Number.isFinite(incomingTime))||(Number.isFinite(incomingTime)&&incomingTime<savedTime)))throw new Error('cópia mais antiga que seu progresso salvo');
         result=candidate;break;
       }catch(error){lastError=error;sourceFailures.push(`${label}: ${error.message}`)}
     }
@@ -595,11 +597,11 @@ async function syncQuests(silent=false){
     state.quests.items=entries.map(([name,value])=>({name,state:Number(value)}));
     state.quests.lastSync=payload.timestamp||now;state.quests.lastChecked=now;state.quests.source=label;state.quests.connection=connection;state.quests.syncError='';state.quests.sourceFailures=connection.startsWith('live')?[]:sourceFailures.slice(0,2);
     state.quests.serviceFetchedAt=result.fetchedAt;
-    if(payload.achievement_diaries&&typeof payload.achievement_diaries==='object'){state.progression.diaries.data=payload.achievement_diaries;state.progression.diaries.lastSync=payload.timestamp||now;state.progression.diaries.source=label}
+    if(payload.achievement_diaries&&!Array.isArray(payload.achievement_diaries)&&typeof payload.achievement_diaries==='object'&&Object.keys(payload.achievement_diaries).length){state.progression.diaries.data=payload.achievement_diaries;state.progression.diaries.lastSync=payload.timestamp||now;state.progression.diaries.source=label}
     if(Array.isArray(payload.combat_achievements)){state.progression.combatAchievements.completed=payload.combat_achievements.map(Number).filter(Number.isFinite);state.progression.combatAchievements.lastSync=payload.timestamp||now;state.progression.combatAchievements.source=label}
-    if(Array.isArray(payload.collection_log)&&(payload.collection_log.length||Number(payload.collectionLogItemCount)>0)){state.progression.collectionLog.completed=payload.collection_log.map(Number).filter(Number.isFinite);state.progression.collectionLog.itemCount=Number(payload.collectionLogItemCount)||state.progression.collectionLog.completed.length;state.progression.collectionLog.lastSync=payload.timestamp||now;state.progression.collectionLog.source=label}
+    if(Array.isArray(payload.collection_log)&&payload.collection_log.length){state.progression.collectionLog.completed=payload.collection_log.map(Number).filter(Number.isFinite);state.progression.collectionLog.itemCount=Number(payload.collectionLogItemCount)||state.progression.collectionLog.completed.length;state.progression.collectionLog.lastSync=payload.timestamp||now;state.progression.collectionLog.source=label}
     const completed=[];
-    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','composite'].includes(goal.mode)&&goal.status!=='archived').forEach(goal=>{const progress=Math.round(goalProgress(goal));if(progress>=100&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
+    state.goals.filter(goal=>['quest','diaryTask','diaryTier','combatAchievement','collectionItem','collectionSource','composite'].includes(goal.mode)&&!['archived','paused'].includes(goal.status)).forEach(goal=>{const progress=Number(goalProgress(goal));if(progress>=99.999&&goal.status!=='done'){goal.status='done';completed.push(goal.title);addHistory('goal',`${goal.title} concluída`,'Conclusão detectada automaticamente pela sincronização.')}else if(progress>0&&goal.status==='planned')goal.status='active'});
     const live=connection.startsWith('live');
     const syncMessage=connection==='service-cache'?`Consulta recente reutilizada (${formatDate(result.fetchedAt)}) · cache de até 30 segundos`:live
       ?changed.length
@@ -607,7 +609,7 @@ async function syncQuests(silent=false){
         :previous.size?'WikiSync consultado ao vivo · nenhuma mudança desde a última leitura':`Quests recebidas · ${entries.length} registros`
       :`Sem acesso ao vivo · exibindo cache de ${formatDate(state.quests.lastSync)}`;
     save(syncMessage,silent);
-  }catch(error){if(stillCurrent()){state.quests.lastChecked=new Date().toISOString();state.quests.syncError=error.message||'falha desconhecida';save('Falha na consulta de quests',true);if(!silent)toast(`Não foi possível atualizar as quests: ${state.quests.syncError}`)}}finally{ui.questSyncing=false;render()}
+  }catch(error){if(stillCurrent()){state.quests.lastChecked=new Date().toISOString();state.quests.syncError=error.message||'falha desconhecida';save('Falha na consulta de quests',true);if(!silent)toast(`Não foi possível atualizar as quests: ${state.quests.syncError}`)}}finally{if(questSyncOperation===operation){questSyncOperation=null;ui.questSyncing=false}render()}
 }
 
 async function loadWikiCatalog(){if(state.bosses.wikiLoaded)return;try{const response=await fetch('https://oldschool.runescape.wiki/api.php?action=query&format=json&origin=*&list=categorymembers&cmtitle=Category%3ABosses&cmlimit=max&cmtype=page');const payload=await response.json(),known=new Set(state.bosses.catalog.map(item=>item.wiki));(payload.query?.categorymembers||[]).forEach(entry=>{if(!known.has(entry.title)){state.bosses.catalog.push({id:`wiki-${entry.pageid}`,name:entry.title,category:'Catálogo Wiki',wiki:entry.title});known.add(entry.title)}});state.bosses.wikiLoaded=true;save('Catálogo atualizado',true)}catch{}}

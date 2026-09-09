@@ -26,7 +26,7 @@ questByName=function(name){
 function reconcileAutomaticGoalStatuses(historyDetail='Conclusão detectada automaticamente pelo progresso atual.'){
   const completed=[],reopened=[],activated=[],relinked=[];
   (state.goals||[]).forEach(goal=>{
-    if(!goal||goal.status==='archived')return;
+    if(!goal||goal.status==='archived'||goal.status==='paused')return;
     if(goal.mode==='quest'&&goal.questName){
       const quest=questByName(goal.questName);
       if(quest&&quest.name!==goal.questName){goal.questName=quest.name;relinked.push(goal.id)}

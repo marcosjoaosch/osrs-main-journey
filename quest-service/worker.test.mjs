@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import {createService} from './worker.mjs';
 const payload = name => ({username:name,quests:{'Swan Song':2},timestamp:'2026-09-08T20:00:00Z'});
 const req = name => new Request('https://service.test/quests?username='+encodeURIComponent(name),{headers:{Origin:'https://marcosjoaosch.github.io'}});
+test('an upstream failure is not cached and a retry can recover',async()=>{
+  let calls=0;const handle=createService({fetchUpstream:async()=>{if(++calls===1)throw new Error('timeout');return Response.json(payload('samurai_jao'))}});
+  assert.equal((await handle(req('samurai_jao'))).status,502);
+  const retry=await handle(req('samurai_jao'));assert.equal(retry.status,200);assert.equal((await retry.json()).cached,false);assert.equal(calls,2);
+});
 test('isolates accounts, coalesces requests and expires the short cache',async()=>{
   let calls=0,time=1000;
   const handle=createService({now:()=>time,fetchUpstream:async url=>{calls++;return Response.json(payload(decodeURIComponent(url.split('/').at(-2))))}});

@@ -26,3 +26,37 @@ test('failed live and older snapshot preserve completed data',async()=>{
   let count=0;const c=setup(async()=>{if(++count<3)throw new Error('offline');return Response.json({username:'samurai_jao',timestamp:'2026-09-01T00:00:00Z',quests:{'Swan Song':0}})});
   c.state.quests.items[0].state=2;await c.syncQuests();assert.equal(c.state.quests.items[0].state,2);assert.ok(c.state.quests.syncError);
 });
+test('new profile can sync while old request finishes without unlocking the new request',async()=>{
+  const waiting=[];const c=setup(()=>new Promise(resolve=>waiting.push(resolve)));
+  const main=c.state,first=c.syncQuests();
+  c.state=structuredClone(main);c.state.username='Iron Samuka';c.profileHub.activeId='iron';
+  const second=c.syncQuests();assert.equal(waiting.length,2);
+  waiting[0](Response.json(envelope()));await first;
+  assert.equal(c.ui.questSyncing,true);assert.equal(main.quests.items[0].state,0);
+  waiting[1](Response.json(envelope('Iron Samuka')));await second;
+  assert.equal(c.state.quests.items[0].state,2);assert.equal(c.state.goals[0].status,'done');assert.equal(c.ui.questSyncing,false);
+});
+test('empty collection payload preserves obtained items even with global catalog size',async()=>{
+  const body=envelope();body.payload.collection_log=[];body.payload.collectionLogItemCount=1721;body.payload.achievement_diaries={};
+  const c=setup(async()=>Response.json(body));await c.syncQuests();
+  assert.deepEqual(c.state.progression.collectionLog.completed,[1]);assert.deepEqual(c.state.progression.diaries.data,{saved:true});
+});
+test('incomplete fractional progress and paused goals are not marked done',async()=>{
+  const c=setup(async()=>Response.json(envelope()));c.goalProgress=()=>99.6;await c.syncQuests();
+  assert.equal(c.state.goals[0].status,'active');
+  c.state.goals[0].status='paused';c.goalProgress=()=>100;await c.syncQuests();assert.equal(c.state.goals[0].status,'paused');
+});
+test('older service cache and foreign player responses cannot replace progress',async()=>{
+  for(const body of [envelope('Other'),{...envelope(),cached:true,payload:{...envelope().payload,timestamp:'2026-09-01T00:00:00Z'}}]){
+    let count=0;const c=setup(async()=>{if(++count===1)return Response.json(body);throw new Error('offline')});
+    await c.syncQuests();assert.equal(c.state.quests.items[0].state,0);assert.ok(c.state.quests.syncError);
+  }
+});
+test('central status reconciliation preserves pauses and completes linked quests once',async()=>{
+  const c=setup(async()=>Response.json(envelope()));let events=0;c.addHistory=()=>events++;
+  c.questByName=name=>c.state.quests.items.find(q=>q.name===name);
+  const auto=readFileSync(new URL('../auto-goal-suite.js',import.meta.url),'utf8');vm.runInContext(auto,c);
+  c.state.goals.push({...c.state.goals[0],title:'Paused',status:'paused'});
+  await c.syncQuests();c.render();c.render();
+  assert.equal(c.state.goals[0].status,'done');assert.equal(c.state.goals[1].status,'paused');assert.equal(events,1);
+});
