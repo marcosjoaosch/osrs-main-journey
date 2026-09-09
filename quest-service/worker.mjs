@@ -41,7 +41,7 @@ export function createService({fetchUpstream = fetch, now = Date.now} = {}) {
         pending.set(key, (async () => {
           const response = await fetchUpstream('https://sync.runescape.wiki/runelite/player/' + encodeURIComponent(username) + '/STANDARD', {
             headers:{'User-Agent':'OSRS-Main-Journey/2.0 (https://github.com/marcosjoaosch/osrs-main-journey)', Accept:'application/json'},
-            signal:AbortSignal.timeout(10000), redirect:'error', cache:'no-store'
+            signal:AbortSignal.timeout(10000), redirect:'manual', cache:'no-store'
           });
           if (!response.ok) { const error = new Error(response.status === 404 ? 'Personagem não encontrado no WikiSync' : 'WikiSync indisponível'); error.status = response.status === 404 ? 404 : 502; throw error; }
           const source = validatePlayer(await response.json(), username);

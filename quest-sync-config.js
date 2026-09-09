@@ -1,2 +1,2 @@
-// Set after the dedicated service has been deployed and verified over HTTPS.
-window.OSRS_QUEST_SERVICE_URL = '';
+// Public read-only WikiSync service; no player goals or credentials are sent.
+window.OSRS_QUEST_SERVICE_URL = 'https://osrs-quest-sync.samuraijmyt.chatgpt.site';

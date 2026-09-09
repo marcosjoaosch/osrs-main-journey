@@ -1,4 +1,4 @@
-# Quest sync service — activation pending
+# Quest sync service
 
 `worker.mjs` exports a Cloudflare-compatible Worker with `/health` and
 `/quests?username=...`. No database, paid dependency or client secret is required.
@@ -24,5 +24,8 @@ are per Worker isolate, not a distributed quota. Before wider traffic, configure
 the hosting provider's edge rate limiting. Failures are never cached as success.
 Source timestamps are not asserted to be RuneLite upload times.
 
-Deployment has NOT occurred. No service URL or credential has been created.
-The empty config keeps the current direct-then-snapshot behavior until activation.
+Published 2026-09-09 at https://osrs-quest-sync.samuraijmyt.chatgpt.site.
+Both samurai_jao and Iron Samuka returned HTTP 200 with GitHub Pages CORS.
+The frontend config uses this service before the direct/snapshot fallbacks.
+Build with `node build.mjs` from this directory for Sites hosting; the project
+identity is stored in `.openai/hosting.json`. Never commit hosting credentials.
