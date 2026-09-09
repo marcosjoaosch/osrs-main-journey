@@ -44,7 +44,8 @@ const osrsTracks = [
   {name:'Teklan',area:'Varlamore',url:'https://oldschool.runescape.wiki/images/Teklan.ogg?d712b'},
   {name:'Monkey Trouble',area:'Ape Atoll',url:'https://oldschool.runescape.wiki/images/Monkey_Trouble.ogg?e23c3'},
   {name:'The Sound of Guthix',area:'Templo de Guthix',url:'https://oldschool.runescape.wiki/images/The_Sound_of_Guthix.ogg?e1872'},
-  {name:'Temple Desecrated',area:'Templo antigo',url:'https://oldschool.runescape.wiki/images/Temple_Desecrated.ogg?d712b'}
+  {name:'Temple Desecrated',area:'Templo antigo',url:'https://oldschool.runescape.wiki/images/Temple_Desecrated.ogg?d712b'},
+  {name:'Last Man Standing',area:'Last Man Standing · PvP',url:'https://oldschool.runescape.wiki/images/Last_Man_Standing.ogg'}
 ];
 const moneyMakerSeed = [
   {id:'mm-vorkath',name:'Vorkath',category:'PvM',intensity:'high',gpHour:3000000,duration:60,skill:'Ranged',level:80,quest:'Dragon Slayer II',notes:'Edite a estimativa conforme seu gear e suas kills por hora.',resource:'Dragon bones e supplies'},
