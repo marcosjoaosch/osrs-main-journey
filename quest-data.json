@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-10T21:48:39.310Z",
+  "timestamp": "2026-09-10T23:25:46.796Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -993,7 +993,7 @@
     "Smithing": 72,
     "Agility": 70,
     "Woodcutting": 74,
-    "Slayer": 75,
+    "Slayer": 76,
     "Defence": 85,
     "Strength": 91,
     "Prayer": 70,
@@ -2019,5 +2019,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-10T21:48:39.497911Z"
+  "_github_checked_at": "2026-09-10T23:25:47.056293Z"
 }
