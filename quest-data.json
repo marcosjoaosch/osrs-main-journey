@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-10T09:01:58.881Z",
+  "timestamp": "2026-09-10T13:29:54.037Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -979,7 +979,7 @@
     "Runecraft": 61,
     "Construction": 83,
     "Cooking": 72,
-    "Magic": 86,
+    "Magic": 87,
     "Fletching": 70,
     "Herblore": 70,
     "Firemaking": 75,
@@ -2019,5 +2019,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-10T09:01:59.124807Z"
+  "_github_checked_at": "2026-09-10T13:29:54.196182Z"
 }
