@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-09T19:54:36.882Z",
+  "timestamp": "2026-09-10T00:03:05.263Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -52,7 +52,7 @@
     "Getting Ahead": 2,
     "Ghosts Ahoy": 2,
     "Goblin Diplomacy": 2,
-    "Grim Tales": 0,
+    "Grim Tales": 2,
     "His Faithful Servants": 2,
     "Hopespear's Will": 0,
     "Horror from the Deep": 2,
@@ -115,7 +115,7 @@
     "The Feud": 2,
     "The Final Dawn": 0,
     "The Forsaken Tower": 2,
-    "The Fremennik Exiles": 0,
+    "The Fremennik Exiles": 1,
     "The Fremennik Isles": 2,
     "The Frozen Door": 1,
     "The Garden of Death": 2,
@@ -975,7 +975,7 @@
   },
   "levels": {
     "Hunter": 70,
-    "Thieving": 72,
+    "Thieving": 73,
     "Runecraft": 60,
     "Construction": 83,
     "Cooking": 72,
@@ -997,7 +997,7 @@
     "Defence": 85,
     "Strength": 91,
     "Prayer": 70,
-    "Farming": 88
+    "Farming": 89
   },
   "music_tracks": {
     "7th Realm": true,
@@ -1231,7 +1231,7 @@
     "Expanse": true,
     "Expecting": true,
     "Expedition": true,
-    "Exposed": false,
+    "Exposed": true,
     "Eye See You": false,
     "Eye of the Storm": true,
     "Faerie": true,
@@ -1247,7 +1247,7 @@
     "The Far Side": false,
     "A Farmer's Grind": true,
     "The Fat Lady Sings": false,
-    "Fe Fi Fo Fum": false,
+    "Fe Fi Fo Fum": true,
     "Fear and Loathing": true,
     "The Feathered Serpent": false,
     "Fenkenstrain's Refrain": true,
@@ -1373,7 +1373,7 @@
     "It's not over 'til...": false,
     "Itsy Bitsy...": false,
     "Jaws of Gluttony": false,
-    "Jaws of the Basilisk": false,
+    "Jaws of the Basilisk": true,
     "Jester Minute": true,
     "Jolly R": true,
     "Joy of the Hunt": true,
@@ -1495,7 +1495,7 @@
     "Morytanian Mystery": true,
     "Mother Ruckus": false,
     "A Mother's Curse": false,
-    "Mouse Trap": false,
+    "Mouse Trap": true,
     "Mudskipper Melody": true,
     "Museum Medley": false,
     "Mutant Medley": true,
@@ -2019,5 +2019,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-09T19:54:37.126368Z"
+  "_github_checked_at": "2026-09-10T00:03:05.528135Z"
 }
