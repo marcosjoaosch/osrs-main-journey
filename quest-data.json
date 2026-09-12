@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-11T22:49:50.652Z",
+  "timestamp": "2026-09-12T00:42:41.432Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -1401,7 +1401,7 @@
     "Lair": false,
     "Lair of the Basilisk": true,
     "Lament": true,
-    "Lament for the Hallowed": false,
+    "Lament for the Hallowed": true,
     "Lament of Meiyerditch": true,
     "Lamistard's Labyrinth": false,
     "Land Down Under": true,
@@ -1728,9 +1728,9 @@
     "Temple of Tribes": true,
     "Temple of the Eye": true,
     "Tempor of the Storm": false,
-    "The Terrible Caverns": false,
+    "The Terrible Caverns": true,
     "The Terrible Tower": true,
-    "The Terrible Tunnels": false,
+    "The Terrible Tunnels": true,
     "Terrorbird Tussle": true,
     "Test Your Sails": true,
     "Test of Companionship": false,
@@ -1885,7 +1885,8 @@
     532,
     535,
     551,
-    552
+    552,
+    589
   ],
   "league_tasks": null,
   "bingo_tasks": [],
@@ -2019,5 +2020,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-11T22:49:50.813935Z"
+  "_github_checked_at": "2026-09-12T00:42:41.609926Z"
 }
