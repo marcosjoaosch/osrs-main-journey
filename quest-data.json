@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-13T11:13:15.425Z",
+  "timestamp": "2026-09-13T14:54:52.077Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -92,7 +92,7 @@
     "Recruitment Drive": 2,
     "Royal Trouble": 2,
     "Scrambled!": 2,
-    "Secrets of the North": 0,
+    "Secrets of the North": 2,
     "Shadow of the Storm": 2,
     "Shadows of Custodia": 2,
     "Shield of Arrav": 2,
@@ -975,7 +975,7 @@
   },
   "levels": {
     "Hunter": 70,
-    "Thieving": 73,
+    "Thieving": 74,
     "Runecraft": 61,
     "Construction": 83,
     "Cooking": 72,
@@ -984,14 +984,14 @@
     "Herblore": 70,
     "Firemaking": 75,
     "Attack": 90,
-    "Fishing": 66,
+    "Fishing": 67,
     "Crafting": 71,
     "Hitpoints": 91,
     "Ranged": 83,
     "Mining": 71,
     "Sailing": 63,
     "Smithing": 72,
-    "Agility": 72,
+    "Agility": 73,
     "Woodcutting": 74,
     "Slayer": 76,
     "Defence": 85,
@@ -1353,7 +1353,7 @@
     "In the Clink": true,
     "In the Manor": true,
     "In the Pits": true,
-    "In the Shadows": false,
+    "In the Shadows": true,
     "Inadequacy": true,
     "Incantation": true,
     "Incarceration": true,
@@ -1490,7 +1490,7 @@
     "Moody": true,
     "The Moons of Ruin": true,
     "Mor Ul Rek": false,
-    "More Than Meets the Eye": false,
+    "More Than Meets the Eye": true,
     "Morytania": true,
     "Morytanian Mystery": true,
     "Mother Ruckus": true,
@@ -1644,7 +1644,7 @@
     "Sea Shanty": true,
     "Sea Shanty 2": true,
     "Sea Shanty Xmas": false,
-    "Secrets of the North": false,
+    "Secrets of the North": true,
     "The Seed of Crwys": false,
     "Serenade": true,
     "Serene": true,
@@ -2020,5 +2020,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-13T11:13:15.563699Z"
+  "_github_checked_at": "2026-09-13T14:54:52.326065Z"
 }
