@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-13T23:36:33.097Z",
+  "timestamp": "2026-09-14T06:57:22.740Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -1069,7 +1069,7 @@
     "Black of Knight": true,
     "Blistering Barnacles": true,
     "The Blood Moon Rises": false,
-    "Blood Rush": false,
+    "Blood Rush": true,
     "Bloodbath": true,
     "Boat 'Em Up": true,
     "Bob's on Holiday": true,
@@ -1634,7 +1634,7 @@
     "Scape Scared": true,
     "Scape Soft": true,
     "Scape Wild": true,
-    "Scar Tissue": false,
+    "Scar Tissue": true,
     "Scarab": true,
     "School's Out": true,
     "Scorching Horizon": true,
@@ -1703,7 +1703,7 @@
     "Storm Brew": false,
     "Stranded": true,
     "Strange Place": true,
-    "Strangled": false,
+    "Strangled": true,
     "Stratosphere": false,
     "Strength of Saradomin": false,
     "Stuck in the Mire": true,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-13T23:36:33.336734Z"
+  "_github_checked_at": "2026-09-14T06:57:22.877021Z"
 }
