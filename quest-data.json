@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-14T06:57:22.740Z",
+  "timestamp": "2026-09-14T13:34:42.977Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -1120,7 +1120,7 @@
     "Claustrophobia": true,
     "Close Quarters": true,
     "Coil": false,
-    "Colossus of the Deep": false,
+    "Colossus of the Deep": true,
     "Competition": false,
     "Complication": true,
     "Confrontation": true,
@@ -1840,7 +1840,7 @@
     "Woodland": true,
     "Work Work Work": true,
     "Workshop": true,
-    "A Worthy Foe": false,
+    "A Worthy Foe": true,
     "Wrath and Ruin": true,
     "Xenophobe": false,
     "Yesteryear": true,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-14T06:57:22.877021Z"
+  "_github_checked_at": "2026-09-14T13:34:43.126821Z"
 }
