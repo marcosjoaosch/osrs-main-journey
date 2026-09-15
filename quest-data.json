@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-15T18:31:08.380Z",
+  "timestamp": "2026-09-15T21:40:01.250Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -33,7 +33,7 @@
     "Defender of Varrock": 2,
     "Demon Slayer": 2,
     "Desert Treasure I": 2,
-    "Desert Treasure II - The Fallen Empire": 1,
+    "Desert Treasure II - The Fallen Empire": 2,
     "Devious Minds": 2,
     "Dragon Slayer II": 2,
     "Dream Mentor": 2,
@@ -996,7 +996,7 @@
     "Slayer": 76,
     "Defence": 85,
     "Strength": 92,
-    "Prayer": 71,
+    "Prayer": 74,
     "Farming": 89
   },
   "music_tracks": {
@@ -1332,7 +1332,7 @@
     "Hermit": true,
     "High Seas": true,
     "High Spirits": true,
-    "His Faithful Servants": false,
+    "His Faithful Servants": true,
     "Hoe Down": true,
     "Home": false,
     "Home Sweet Home": true,
@@ -1457,7 +1457,7 @@
     "Marooned": true,
     "Marzipan": true,
     "Masquerade": true,
-    "Master of Puppets": false,
+    "Master of Puppets": true,
     "Mastermindless": true,
     "A Matter of Intrigue": true,
     "Mausoleum": true,
@@ -1743,7 +1743,7 @@
     "Thrall of the Devourer": true,
     "Thrall of the Serpent": true,
     "Throne of the Demon": true,
-    "Tick Tock": false,
+    "Tick Tock": true,
     "Time Out": true,
     "Time to Mine": true,
     "Tiptoe": true,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-15T18:31:08.612657Z"
+  "_github_checked_at": "2026-09-15T21:40:01.415012Z"
 }
