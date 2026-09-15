@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-15T14:51:12.205Z",
+  "timestamp": "2026-09-15T18:31:08.380Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -984,7 +984,7 @@
     "Herblore": 70,
     "Firemaking": 75,
     "Attack": 90,
-    "Fishing": 67,
+    "Fishing": 68,
     "Crafting": 71,
     "Hitpoints": 91,
     "Ranged": 83,
@@ -1238,7 +1238,7 @@
     "The Fairy Dragon": true,
     "Faith of the Hefin": true,
     "Faithless": true,
-    "The Fallen Empire": false,
+    "The Fallen Empire": true,
     "Fanfare": true,
     "Fanfare 2": true,
     "Fanfare 3": true,
@@ -1674,7 +1674,7 @@
     "Sojourn": true,
     "Solitude": false,
     "Song of the Elves": true,
-    "Song of the Silent Choir": false,
+    "Song of the Silent Choir": true,
     "Sorceress's Garden": false,
     "Soul Fall": true,
     "Soul Wars": true,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-15T14:51:12.379939Z"
+  "_github_checked_at": "2026-09-15T18:31:08.612657Z"
 }
