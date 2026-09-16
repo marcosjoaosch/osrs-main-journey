@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-16T16:43:23.149Z",
+  "timestamp": "2026-09-16T22:19:11.278Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -1084,7 +1084,7 @@
     "Brain Battle": true,
     "Breeze": true,
     "Brew Hoo Hoo!": false,
-    "The Bridge": false,
+    "The Bridge": true,
     "Brimstail's Scales": true,
     "Bubble and Squeak": false,
     "Bunny's Sugar Rush": false,
@@ -1339,7 +1339,7 @@
     "Honkytonky Sea Shanty 2": true,
     "Horizon": true,
     "The Houses of Kourend": true,
-    "Hunted": false,
+    "Hunted": true,
     "Hypnotised": true,
     "I'm Sorry": false,
     "Iban": true,
@@ -1568,7 +1568,7 @@
     "Predator Xarpus": true,
     "Preservation": true,
     "Preserved": true,
-    "Prey": false,
+    "Prey": true,
     "Prime Time": true,
     "Principality": true,
     "Prison Break": true,
@@ -1587,7 +1587,7 @@
     "Reign of the Basilisk": true,
     "Relics": true,
     "Rellekka": true,
-    "Remnants": false,
+    "Remnants": true,
     "Remote Waters": true,
     "Rest in Peace": true,
     "Revenants": false,
@@ -1672,7 +1672,7 @@
     "Slug a Bug Ball": true,
     "Snowflake & My Arm": true,
     "Sojourn": true,
-    "Solitude": false,
+    "Solitude": true,
     "Song of the Elves": true,
     "Song of the Silent Choir": true,
     "Sorceress's Garden": false,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-16T16:43:23.310821Z"
+  "_github_checked_at": "2026-09-16T22:19:11.445454Z"
 }
