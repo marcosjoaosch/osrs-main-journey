@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-16T06:42:28.883Z",
+  "timestamp": "2026-09-16T12:03:26.209Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -106,7 +106,7 @@
     "Tears of Guthix": 2,
     "Temple of the Eye": 2,
     "The Ascent of Arceuus": 2,
-    "The Blood Moon Rises": 0,
+    "The Blood Moon Rises": 1,
     "The Corsair Curse": 2,
     "The Curse of Arrav": 2,
     "The Depths of Despair": 2,
@@ -1096,7 +1096,7 @@
     "Call of the Tlati": true,
     "Camelot": true,
     "Cannonballin'": true,
-    "Castle Drakan": false,
+    "Castle Drakan": true,
     "Castle Wars": false,
     "Catacombs and Tombs": true,
     "Catch Me If You Can": false,
@@ -1290,7 +1290,7 @@
     "Garden of Summer": false,
     "Garden of Winter": false,
     "The Gates of Menaphos": true,
-    "Gathering": false,
+    "Gathering": true,
     "The Gauntlet": false,
     "The Genie": true,
     "Getting Down to Business": true,
@@ -1467,7 +1467,7 @@
     "Medieval": true,
     "Mellow": true,
     "Melodrama": true,
-    "Memories of the Myreque": false,
+    "Memories of the Myreque": true,
     "Meridian": true,
     "Method of Madness": true,
     "Miles Away": true,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-16T06:42:29.117227Z"
+  "_github_checked_at": "2026-09-16T12:03:26.491460Z"
 }
