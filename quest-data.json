@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-16T22:19:11.278Z",
+  "timestamp": "2026-09-17T05:18:16.793Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -106,7 +106,7 @@
     "Tears of Guthix": 2,
     "Temple of the Eye": 2,
     "The Ascent of Arceuus": 2,
-    "The Blood Moon Rises": 1,
+    "The Blood Moon Rises": 2,
     "The Corsair Curse": 2,
     "The Curse of Arrav": 2,
     "The Depths of Despair": 2,
@@ -996,7 +996,7 @@
     "Slayer": 76,
     "Defence": 85,
     "Strength": 92,
-    "Prayer": 74,
+    "Prayer": 75,
     "Farming": 89
   },
   "music_tracks": {
@@ -1068,7 +1068,7 @@
     "Big Chords": true,
     "Black of Knight": true,
     "Blistering Barnacles": true,
-    "The Blood Moon Rises": false,
+    "The Blood Moon Rises": true,
     "Blood Rush": true,
     "Bloodbath": true,
     "Boat 'Em Up": true,
@@ -1157,7 +1157,7 @@
     "Darkmeyer": true,
     "Darkness in the Depths": true,
     "Davy Jones' Locker": true,
-    "Dawn": false,
+    "Dawn": true,
     "Dead Can Dance": true,
     "Dead Quiet": true,
     "Deadlands": true,
@@ -1291,7 +1291,7 @@
     "Garden of Winter": false,
     "The Gates of Menaphos": true,
     "Gathering": true,
-    "The Gauntlet": false,
+    "The Gauntlet": true,
     "The Genie": true,
     "Getting Down to Business": true,
     "Gill Bill": true,
@@ -1334,14 +1334,14 @@
     "High Spirits": true,
     "His Faithful Servants": true,
     "Hoe Down": true,
-    "Home": false,
+    "Home": true,
     "Home Sweet Home": true,
     "Honkytonky Sea Shanty 2": true,
     "Horizon": true,
     "The Houses of Kourend": true,
     "Hunted": true,
     "Hypnotised": true,
-    "I'm Sorry": false,
+    "I'm Sorry": true,
     "Iban": true,
     "Ice Melody": true,
     "Ice and Fire": true,
@@ -2024,5 +2024,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-16T22:19:11.445454Z"
+  "_github_checked_at": "2026-09-17T05:18:16.944334Z"
 }
