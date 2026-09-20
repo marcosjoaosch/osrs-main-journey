@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-20T16:59:10.509Z",
+  "timestamp": "2026-09-20T19:16:39.823Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -1894,7 +1894,9 @@
     535,
     551,
     552,
-    589
+    588,
+    589,
+    590
   ],
   "league_tasks": null,
   "bingo_tasks": [],
@@ -2028,5 +2030,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-20T16:59:10.795860Z"
+  "_github_checked_at": "2026-09-20T19:16:40.082869Z"
 }
