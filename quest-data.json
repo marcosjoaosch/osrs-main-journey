@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-23T16:57:32.875Z",
+  "timestamp": "2026-09-23T22:34:50.328Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -986,8 +986,8 @@
     "Attack": 90,
     "Fishing": 68,
     "Crafting": 71,
-    "Hitpoints": 92,
-    "Ranged": 88,
+    "Hitpoints": 93,
+    "Ranged": 89,
     "Mining": 71,
     "Sailing": 63,
     "Smithing": 72,
@@ -1891,6 +1891,7 @@
     397,
     399,
     515,
+    518,
     521,
     527,
     528,
@@ -2036,5 +2037,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-23T16:57:33.042264Z"
+  "_github_checked_at": "2026-09-23T22:34:50.459599Z"
 }
