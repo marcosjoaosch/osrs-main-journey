@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-09-27T15:38:29.462Z",
+  "timestamp": "2026-09-27T19:14:53.078Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -886,7 +886,7 @@
           false,
           false,
           false,
-          false,
+          true,
           false,
           false
         ]
@@ -1119,7 +1119,7 @@
     "Clanliness": true,
     "Claustrophobia": true,
     "Close Quarters": true,
-    "Coil": false,
+    "Coil": true,
     "Colossus of the Deep": true,
     "Competition": false,
     "Complication": true,
@@ -1893,6 +1893,7 @@
     394,
     397,
     399,
+    488,
     515,
     518,
     521,
@@ -2045,5 +2046,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-09-27T15:38:29.616437Z"
+  "_github_checked_at": "2026-09-27T19:14:53.328949Z"
 }
