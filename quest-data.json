@@ -1,11 +1,12 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-10-02T12:32:36.111Z",
+  "timestamp": "2026-10-02T17:59:18.779Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
     "A Night at the Theatre": 2,
     "A Porcine of Interest": 2,
+    "A Ruff Situation": 0,
     "A Soul's Bane": 2,
     "A Tail of Two Cats": 2,
     "A Taste of Hope": 2,
@@ -23,6 +24,7 @@
     "Client of Kourend": 2,
     "Cold War": 2,
     "Contact!": 2,
+    "Crab Quest": 0,
     "Creature of Fenkenstrain": 2,
     "Current Affairs": 2,
     "Curse of the Empty Lord": 2,
@@ -2049,5 +2051,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-10-02T12:32:36.285575Z"
+  "_github_checked_at": "2026-10-02T17:59:18.997677Z"
 }
