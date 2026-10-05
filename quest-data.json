@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-10-05T05:55:28.246Z",
+  "timestamp": "2026-10-05T12:59:05.294Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -1275,7 +1275,7 @@
     "The Forlorn Homestead": true,
     "The Forsaken Tower": true,
     "The Forsaken": true,
-    "Fossilised": false,
+    "Fossilised": true,
     "The Foundry": true,
     "The Fragment": true,
     "The Fremennik Kings": true,
@@ -2056,5 +2056,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-10-05T05:55:28.455704Z"
+  "_github_checked_at": "2026-10-05T12:59:05.491411Z"
 }
