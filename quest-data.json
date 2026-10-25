@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-10-25T18:56:43.587Z",
+  "timestamp": "2026-10-25T21:19:56.195Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -849,7 +849,7 @@
     },
     "Western Provinces": {
       "Easy": {
-        "complete": null,
+        "complete": true,
         "tasks": [
           true,
           true,
@@ -865,7 +865,7 @@
         ]
       },
       "Elite": {
-        "complete": null,
+        "complete": false,
         "tasks": [
           false,
           false,
@@ -877,7 +877,7 @@
         ]
       },
       "Hard": {
-        "complete": null,
+        "complete": false,
         "tasks": [
           false,
           false,
@@ -895,7 +895,7 @@
         ]
       },
       "Medium": {
-        "complete": null,
+        "complete": false,
         "tasks": [
           false,
           true,
@@ -2067,5 +2067,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-10-25T18:56:43.760273Z"
+  "_github_checked_at": "2026-10-25T21:19:56.418705Z"
 }
