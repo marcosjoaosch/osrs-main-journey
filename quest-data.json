@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-10-29T20:32:49.219Z",
+  "timestamp": "2026-10-30T00:12:01.358Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -987,7 +987,7 @@
     "Herblore": 70,
     "Firemaking": 75,
     "Attack": 91,
-    "Fishing": 68,
+    "Fishing": 69,
     "Crafting": 71,
     "Hitpoints": 94,
     "Ranged": 90,
@@ -2068,5 +2068,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-10-29T20:32:49.381672Z"
+  "_github_checked_at": "2026-10-30T00:12:01.595075Z"
 }
