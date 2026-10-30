@@ -1,6 +1,6 @@
 {
   "username": "samurai_jao",
-  "timestamp": "2026-10-30T11:38:48.850Z",
+  "timestamp": "2026-10-30T17:09:30.071Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -982,7 +982,7 @@
     "Runecraft": 62,
     "Construction": 83,
     "Cooking": 72,
-    "Magic": 91,
+    "Magic": 92,
     "Fletching": 70,
     "Herblore": 70,
     "Firemaking": 75,
@@ -992,7 +992,7 @@
     "Hitpoints": 94,
     "Ranged": 90,
     "Mining": 72,
-    "Sailing": 64,
+    "Sailing": 65,
     "Smithing": 72,
     "Agility": 73,
     "Woodcutting": 76,
@@ -2068,5 +2068,5 @@
     341,
     357
   ],
-  "_github_checked_at": "2026-10-30T11:38:48.987363Z"
+  "_github_checked_at": "2026-10-30T17:09:30.479737Z"
 }
