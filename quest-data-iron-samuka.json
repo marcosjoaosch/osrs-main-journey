@@ -1,6 +1,6 @@
 {
   "username": "Iron Samuka",
-  "timestamp": "2026-11-04T09:31:21.736Z",
+  "timestamp": "2026-11-04T17:26:16.487Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
@@ -74,6 +74,7 @@
     "Monkey Madness II": 2,
     "Mountain Daughter": 2,
     "Mourning's End Part II": 2,
+    "Mudfoot's Big Adventure": 0,
     "My Arm's Big Adventure": 2,
     "Olaf's Quest": 2,
     "Pandemonium": 2,
@@ -134,6 +135,7 @@
     "The Red Reef": 0,
     "The Ribbiting Tale of a Lily Pad Labour Dispute": 2,
     "The Slug Menace": 2,
+    "The Writing's on the Wall": 0,
     "Tower of Life": 2,
     "Troubled Tortugans": 2,
     "Twilight's Promise": 2,
@@ -1217,6 +1219,7 @@
     "Echoes of the North": false,
     "Egypt": true,
     "Elder Wisdom": true,
+    "Elementary": false,
     "Elven Guardians": true,
     "Elven Mist": true,
     "Elven Seed": false,
@@ -1974,5 +1977,5 @@
     338,
     339
   ],
-  "_github_checked_at": "2026-11-04T09:31:21.832014Z"
+  "_github_checked_at": "2026-11-04T17:26:16.558158Z"
 }
