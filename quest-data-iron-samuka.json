@@ -1,12 +1,13 @@
 {
   "username": "Iron Samuka",
-  "timestamp": "2026-11-11T23:27:04.699Z",
+  "timestamp": "2026-11-12T03:59:02.554Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
     "A Night at the Theatre": 0,
     "A Porcine of Interest": 2,
     "A Ruff Situation": 0,
+    "A Shell of a Friend": 0,
     "A Soul's Bane": 2,
     "A Tail of Two Cats": 2,
     "A Taste of Hope": 2,
@@ -109,6 +110,7 @@
     "Tears of Guthix": 2,
     "Temple of the Eye": 2,
     "The Ascent of Arceuus": 2,
+    "The Birds and the Wasps": 0,
     "The Blood Moon Rises": 0,
     "The Corsair Curse": 2,
     "The Curse of Arrav": 2,
@@ -1977,5 +1979,5 @@
     338,
     339
   ],
-  "_github_checked_at": "2026-11-11T23:27:04.758063Z"
+  "_github_checked_at": "2026-11-12T03:59:02.624088Z"
 }
