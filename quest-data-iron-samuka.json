@@ -1,9 +1,10 @@
 {
   "username": "Iron Samuka",
-  "timestamp": "2026-11-18T23:01:14.760Z",
+  "timestamp": "2026-11-19T04:01:51.994Z",
   "quests": {
     ".": 0,
     "A Kingdom Divided": 2,
+    "A New Leaf": 0,
     "A Night at the Theatre": 0,
     "A Porcine of Interest": 2,
     "A Ruff Situation": 0,
@@ -81,6 +82,8 @@
     "Pandemonium": 2,
     "Perilous Moons": 2,
     "Prying Times": 2,
+    "Rag and Bone Man II": 0,
+    "Rag and Bone Man III": 0,
     "Ratcatchers": 2,
     "Recipe for Disaster": 2,
     "Recipe for Disaster - Another Cook's Quest": 2,
@@ -189,7 +192,6 @@
     "Priest in Peril": 2,
     "Prince Ali Rescue": 2,
     "Rag and Bone Man I": 2,
-    "Rag and Bone Man II": 2,
     "Regicide": 2,
     "Romeo & Juliet": 2,
     "Roving Elves": 2,
@@ -1354,6 +1356,7 @@
     "Home Sweet Home": true,
     "Honkytonky Sea Shanty 2": true,
     "Horizon": true,
+    "The Horror": false,
     "The Houses of Kourend": true,
     "Hunted": false,
     "Hypnotised": true,
@@ -1669,6 +1672,7 @@
     "Set Sail": true,
     "The Setting Sun": true,
     "Settlement": true,
+    "Severed": false,
     "Shadow of the Ocean": false,
     "The Shadow": true,
     "Shadowland": true,
@@ -1979,5 +1983,5 @@
     338,
     339
   ],
-  "_github_checked_at": "2026-11-18T23:01:14.818534Z"
+  "_github_checked_at": "2026-11-19T04:01:52.054646Z"
 }
